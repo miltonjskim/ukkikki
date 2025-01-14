@@ -1,8 +1,9 @@
 
 # 2025-01-13 아이디어 기획
 <details>
+<summary>
 # **🏠 APTogether: 입주민들이 함께 만들어가는 커뮤니티**
-
+</summary>
 
 
 ## 1. 사용자
