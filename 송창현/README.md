@@ -1,5 +1,5 @@
 
-
+<details>
 # 2025-01-13 아이디어 기획
 
 # **🏠 APTogether: 입주민들이 함께 만들어가는 커뮤니티**
@@ -141,3 +141,5 @@
 - flex: 1은 flex-grow, flex-shrink, flex-basis를 모두 설정하는 단축 속성이다.
 
 - 부모 요소가 display: flex 일 때, 자식 요소가 동일한 비율로 공간을 차지하도록 합니다.
+
+</details>
