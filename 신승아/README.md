@@ -1,5 +1,7 @@
-
-# **2025-01-13**
+<details>
+<summary>
+  2025-01-13 
+</summary>
 
 ## 1. 개인 아이디어 제시
 
@@ -204,4 +206,205 @@ peerConnection.ontrack = (event) => {
 ... 추후 더 공부 예정
 
 ## 4. 느낀점점
-=> webRTC를 사용하기 위해서 API를 연결하는 과정을 알아보았다. 아이디어 구체화를 하는 과정에서 AI를 사용하면 더 좋을 거 같다는 의견에 이 부분을 어떻게 연결해야할 지 좀 더 알아봐야 할 것 같다다 
+=> webRTC를 사용하기 위해서 API를 연결하는 과정을 알아보았다. 아이디어 구체화를 하는 과정에서 AI를 사용하면 더 좋을 거 같다는 의견에 이 부분을 어떻게 연결해야할 지 좀 더 알아봐야 할 것 같다.
+
+</details>
+
+<details>
+<summary>
+  2025-01-14 
+</summary>
+
+  # 아이디어 기획
+
+  - [아이디어 고도화](https://www.figma.com/board/2zJB2KigZgpFTxEPSVnbUj/%EA%B8%B0%EB%8A%A5-%EA%B3%A0%EB%8F%84%ED%99%94?node-id=0-1&p=f&t=KL81nPwpbUIYEwFs-0)
+
+  ## 2차 미팅 진행
+  - Q) 가고자 하는 곳에 비행기가 없을 경우?
+    => [스카이스캐너API](https://developers.skyscanner.net/docs/flights-live-prices/overview)
+      를 통해 출발지-도착지 검색 후만 검색을 입력했을 때 결과값을 활용
+  - Q) 공동 작업 필수로 넣기
+    => getDisplayMedia API 활용 예상
+
+# git 공부 및 정리
+```jsx
+git init
+```
+
+⇒ 새로운 Git 저장소(repository)를 생성할 때 사용
+
+## staging area
+
+⇒ commit을 하기 전에 commit할 파일을 골라 놓는 곳
+
+- staging
+    
+    = staging area에 파일 넣는 행위
+    
+    → **git add  명령어로 넣음**
+    
+
+## repository
+
+⇒ commit된 파일의 버전들을 모아 놓는 곳
+
+# git add
+
+1.
+
+```jsx
+git add 파일명1, 파일명2 
+=> 여러 파일 스테이징
+```
+
+2.
+
+```jsx
+git add .
+=> 모든 파일을 전부 스테이징
+```
+
+1. 상태 확인
+
+```jsx
+git stateus
+=> 지금 변경된 파일, 스테이징된 파일을 알려줌
+```
+
+1. 스테이징 취소
+
+```jsx
+git restore --staged 파일명
+```
+
+# git commit
+
+1. commit
+
+```jsx
+git commit -m '메세지'
+```
+
+1. 상태 확인
+
+```jsx
+git log --all --oneline 
+git log -=all --oneline --graph //그래프로 그려줌
+=> commit 기록을 한 눈에 파악하기
+	입력 후엔 Vim 에디터가 켜져서 j,k 키로 위아래 스크롤이 가능, q키로 종료
+```
+
+VScode 에디터에서 
+
+➕ 누르면 git add
+
+✔️ 누르면 git commit 
+
+# diff
+
+1. 과거 특정 파일과 현재 파일 비교
+
+```jsx
+git diff(tool) 커밋id
+```
+
+1. 과거 특정 commit 2개 간의 차이점 비교
+
+```jsx
+git diff(tool) 커밋id1 커밋id2
+```
+
+Vim 에디터가 켜질 경우
+
+hjkl 로 움직일 수 있고 :q 여러번 또는 :qa 임
+
+근데 **git graph**
+
+# git branch
+
+⇒ 프로젝트의 복사본을 만드는 것과 같음
+
+```jsx
+git branch 브랜치이름
+```
+
+⇒ 브랜치’만’ 생성
+
+```jsx
+git switch 브랜치이름
+//전에는 git checkout 브랜치명 을 사용
+```
+
+⇒ 브랜치 이동
+
+```jsx
+git status
+```
+
+⇒ 현재 위치 확인
+
+# git merge
+
+⇒ 브랜치에서 작업한 코드를 main브랜치에 합하는 것
+
+1. push하려는 브랜치로 이동 (ex git switch main)
+2. 합치려는 브랜치 입력
+
+```jsx
+git switch main
+git merge 브랜치명
+```
+
+※ 합칠 때 주의사항
+
+⇒ master와 banch에서 같은 파일, 같은 줄 CONFLICT 발생
+
+<<<< / >>>> / ==== 쓸데없는 것을 지우고 원하는 코드만 남기기
+
+그 후
+
+```jsx
+git add 파일명
+git commit -m '메세지'
+```
+
+## 요약
+
+```jsx
+브랜치 생성 => git branch 브랜치명
+브랜치 이동 => git switch 브랜치명
+브랜치 합치기 main/master 브랜치로 이동한 뒤=>  git merge 브랜치명
+브랜치마다 commit 내역을 그래프로 보고 싶을 경우 => git log--graph--online--all
+브랜치 합칠 때 conflict발생 시 파일열어서 수정 후 => git add, commit
+
+```
+
+# git restore
+
+⇒ 최근 commit된 상태로 현재 파일의 수정 내역을 되돌릴 수 있음
+
+```jsx
+git restore 파일명
+git restore --source 커밋아이디 파일명 //입력한 파일이 특정 커밋 아이디 시점으로 복귀
+```
+
+# git revert
+⇒ 3개의 commit 중 2번째 파일이 문제가 많아서 commit을 취소하고 싶다?
+
+실은 없애는 건 아니고 commit하나를 취소한 commit이 생성되는 것
+
+```jsx
+git revert 커밋아이디
+```
+
+→ 입력하면 에디터가 뜨는데 커밋메세지 수정하고 닫기
+
+→ 만약 Vim에디터가 뜰 경우? 이 또한 커밋메세지 수정하라는 건데 수정하려면 i눌러서 수정
+
+아닐 경우 esc 누른 후 :wq
+
+# git reset
+
+⇒ 걍 최대한 최대한도 아니고 사용하지 않는다 생각
+</details>
+
