@@ -338,6 +338,29 @@ public interface EntityManager {
 - 삭제된 엔티티는 재사용하지말고 자연스럽게 가비지 컬렉션의 대상이 되도록 두는 것이 좋다
 </details>
 
+<details>
+  <summary>[피그마 특강 1일차] 기억할만한 팁</summary>
+
+  ## 1. 피그마 파일 Thumbnail 설정 방법
+- **Frame**에서 우클릭 → `Set as thumbnail` 선택
+- 해당 Frame이 파일의 Thumbnail로 설정됨, 반영되는 데 딜레이 있음
+
+---
+
+## 2. 댓글(Comment) 남기기
+- **@멤버이름**으로 멤버를 지정하면 해당 멤버에게 알림 전송 가능
+- **주의사항**: 멤버를 지정하지 않을 경우, **모든 멤버에게 이메일로 알림 전송**
+
+## 3. 피그마 파일 옮기기
+- `Drafts` ↔ `Project` 간 **드래그 앤 드롭**으로 파일 이동 가능
+- 작업하면서 흐름 끊기지 않고 파일 이동시키고 싶으면? : 피그마 작업 화면에서 파일명 우측 드롭다운 클릭 -> move
+
+## 4. 피그마 히스토리 기능
+- 파일명 우측 드롭다운 -> Show version history
+- history 버전으로 묶어두는 것 가능
+
+</details>
+
 # 3️⃣일차 : 2025-01-15(WED)
 <details>
   <summary>Toggle Content</summary>
