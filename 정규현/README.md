@@ -142,8 +142,6 @@ STUN/TURN 서버를 활용하여 NAT를 우회하고 ICE를 통해 최적의 경
 - 하지만 STUN은 항상 효과적이지 않다.
 - 두 단말이 같은 NAT 환경에 있을 경우 NAT의 보안정책이 엄격하거나 등의 이유에 따라 STUN이 완벽한 해결책이 되지는 않는다.
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/b1df6d5a-de05-4585-9af1-fa427a28a608/168ffaed-61d5-4964-aab7-693f52f78f59/image.png)
-
 ### TURN(Traversal Using Relays around NAT)
 
 - STUN의 확장으로 NAT 환경에서 릴레이하여 통신을 하게 된다.
@@ -156,7 +154,6 @@ STUN/TURN 서버를 활용하여 NAT를 우회하고 ICE를 통해 최적의 경
 - 클라이언트와의 연결을 거의 항상 제공하지만 STUN에 비해 리소스 낭비가 심하다.
 - 따라서 ICE Candidate 과정에서 local IP로 연결할 수 있는지, Public IP로 연결할 수 있는지를( 모든 후보군을 찾은 후) 알아낸 후 최후의 수단으로 사용해야 함
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/b1df6d5a-de05-4585-9af1-fa427a28a608/0af3af47-bec9-41c6-9f4d-9d7fed45e78a/image.png)
 
 ### ICE Candidate Gathering
 
