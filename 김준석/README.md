@@ -189,7 +189,7 @@ WebRTC와 결합하여 대규모 실시간 통신 서비스의 핵심 역할을 
 
 <details>
   <summary>
-  <strong>1월 14일 수요일</strong>
+  <strong>1월 15일 수요일</strong>
   </summary>
 
 # CDN과 Socket의 아키텍처
