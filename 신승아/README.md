@@ -408,3 +408,166 @@ git revert 커밋아이디
 ⇒ 걍 최대한 최대한도 아니고 사용하지 않는다 생각
 </details>
 
+
+<details>
+<summary>
+  2025-01-15 
+</summary>
+  
+  # Jira
+
+  = 프로젝트 관리 및 이슈 추적 시스템
+
+→ 비슷한 서비스:  Github, Trello 등
+
+- 장점
+    - 애자일 한 프로젝트 관리 도구 제공
+        
+        → 칸반, 스크럼 등의 개발 방식간략한 UI/UX, 타앱과의 연동성(Gihub, Slack 등)
+        
+    - 이슈 관리
+        
+        → 이슈를 세분화하여 다양한 업무를 계층화 할 수 있음
+        
+- 특징
+    1. 이슈 및 작업 관리 
+        1. 이슈 트래킹 (이슈 추적)
+        2. 이슈 워크플로우 ⇒ 이슈의 진행 상황을 시각적으로 추적
+    2. 프로젝트 관리
+    3. 팀 협업
+        1. 사용자 및 역할 관리 ⇒ 각 팀원의 역할과 권한을 부여할 수 있고, 관리자는 팀원들이 어떤 작업을 할 수 있을지 세부적으로 조정 가능
+    4. 자동화
+        1. 반복적인 작업을 자동화할 수 있는 기능 
+        2. 특정 작업에 대해 알림을 설정하여 팀 내의 중요 변경 사항이나 이벤트에 대해 알릴 수 있음
+    
+
+## EPIC
+
+= 제일 큰 기능 단위나 프로젝트의 주요 영역을 나타냄
+
+→ 여러 개의 작은 작업으로 분해해야할 큰 목표 또는 기능으로 표
+
+- 주로 Major Feature들을 중심으로 정의
+- 해당 이슈의 출처와 목적을 분명하게 하기 위해 ~~으로서, ~이 필요하다는 식으로 작성하는 것을 추천
+- 장기적인 목표로, 한 번에 완료될 수 없는 큰 작업
+
+## 태스크(Task)
+
+= 실제로 수행해야 할 구체적인 작업이나 활동
+
+→ 구체적인 작업 단위
+
+## 하위 작업(Sub Task)
+
+= 위의 이슈들의 하위 작업
+
+- commit이라고 생각하면 좋다
+
+-----
+# 개인 공부
+- vue를 공부할 떈 axios 라이브러리를 사용하여 서버에 데이터 요청하였다. 검색 또는 gpt를 통해 서버 요청 관련 질문을 하였을 때 fetch()를 사용하는 결과가 많이 나와서 fetch에 대한 공부를 진행했다.
+
+## fetch
+
+```jsx
+fetch().then().then()
+```
+
+- fetch() : 요청지 주소, method headers 등 요청정보, 데이터 정보(body)
+- then():  첫번째 then. 받을 데이터 형태의 빈깡통으로 세팅 →나머지 랜더링 계속
+- then() : 두번째 then. 실제 데이터가 담기는 곳 → 랜더링 완료 후 두번째 then 에 데이터가 있으면 다시 랜더링
+
+### fetch의 사용: GET 방식으로 서버에 데이터 요청
+
+```jsx
+fetch('요청지 주소', { method : "GET" })       //메소드 방식 지정
+        .then(res => res.json())              //json으로 받을 것을 명시
+        .then(res => {                        //실제 데이터를 상태변수에 업데이트
+            console.log(1, res);
+            setValue(res);
+		}); 
+```
+
+### fetch의 사용: POST 방식으로 서버에 데이터 요청
+
+```jsx
+fetch("요청지 주소", {
+            method : "POST",          //메소드 지정
+            headers : {               //데이터 타입 지정
+                "Content-Type":"application/json; charset=utf-8"
+            },
+            body: JSON.stringify(data)   //실제 데이터 파싱하여 body에 저장
+        }).then(res=>res.json())        // 리턴값이 있으면 리턴값에 맞는 req 지정
+          .then(res=> {
+            console.log(res);          // 리턴값에 대한 처리
+          });
+```
+
+### 로그인 로직(fetch 사용)
+
+```jsx
+const response = await fetch(
+      "요청지 주소",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      }
+    );
+    const result = await response.json();
+```
+
+- const response = await fetch(URL, options):
+    - 첫 번째 인수 ⇒ 요청을 보낼 URL
+    - 두 번째 인수 ⇒ 요청 옵션(메소드, 헤더, 바디 등)을 객체 형태로 전달
+    - await ⇒ Promise가 완료될 때까지 기다린 후, 그 결과를 result에 저장
+
+위 코드는 비동기식으로 작동하므로, await키워드를 사용하는 부분은 반드시 asyn 함수 내부에서 호출하기
+
+### 회원가입 구현
+
+```jsx
+//서버 통신
+try {
+      const response = await fetch(
+        " https://port-0-gateway-12fhqa2llofoaeip.sel5.cloudtype.app/auth/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.status === 201) {
+        // Redirect to login.html
+        console.log("성공! 이메일주소: " + data.email);
+        navigate("/login"); // 로그인 성공시 홈으로 이동합니다.
+      } else if (response.status === 400) {
+        // Handle error
+        alert(`회원가입 실패: ${data.email}`);
+      }
+    } catch (error) {
+      console.error("오류 발생:", error);
+    }
+```
+
+### 로그아웃
+
+```jsx
+sessionStorage.removeItem("token");
+sessionStorage.removeItem("email");
+sessionStorage.removeItem("role");
+sessionStorage.removeItem("storeid");
+```
+
+⇒ sessionStorage에 갖고 있던 로그인 정보를 모두 버리기
+</details>
