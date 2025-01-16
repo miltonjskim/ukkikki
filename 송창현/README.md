@@ -348,9 +348,8 @@
 
 
 <details>
-<summary>
-2025-01-16 styled component 와 tailwind css 의 차이
-</summary>
+<summary>2025-01-16 Styled Components vs Tailwind CSS</summary>
+
 ## 1. Styled Components
 ### 개념
 CSS-in-JS 라이브러리로, JavaScript 코드 안에서 CSS를 직접 작성할 수 있음
