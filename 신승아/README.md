@@ -571,3 +571,138 @@ sessionStorage.removeItem("storeid");
 
 ⇒ sessionStorage에 갖고 있던 로그인 정보를 모두 버리기
 </details>
+
+<details>
+<summary>
+  2025-01-16 
+</summary>
+
+  # 📊[플로우 차트](https://www.figma.com/board/2zJB2KigZgpFTxEPSVnbUj/%EA%B8%B0%EB%8A%A5-%EA%B3%A0%EB%8F%84%ED%99%94?node-id=0-1&p=f&t=mGwDoWI0u6nyt1Ye-0)
+
+  - 전체적인 프로젝트 흐름을 사용자와 여행사를 나눠 완성
+
+  # 📜[기능명세서](https://www.notion.so/17c8b1bba83d806eaa23c10a39ce9ccd)
+
+  - 페이지를 큰 틀로 잡고 사용자, 여행사 입장에서 각각의 상세 기능을 작성성
+
+  # PWA
+
+Progressive Web App
+
+= 웹 사이트를 안드로이드/ios 모바일 앱처럼 사용할 수 있게 만드는 일종의 웹개발 기술
+
+ 
+
+## 웹사이트를 PWA화 시키면 좋은 점
+
+1. **스마트폰, 태블릿 바탕화면에 웹사이트를 설치 가능**
+    
+    ⇒ 설치된 앱을 구르면 상단 URL바가 제거된 크롬 브라우저가 뜸
+    
+2. **오프라인에서도 동작 가능**
+    
+    ⇒ service-worker.js라는 파일과 브라우저의 Cache storage  덕분
+    
+    (js로 게임 만들 때 유용)
+    
+3. **설치 유도 비용이 매우 적음**
+    
+    ⇒ 앱 설치를 유도하는 마케팅 비용이 적게 들어 좋음
+    
+    (웹사이트 방문자들에게 간단한 팝업을 띄워서 설치 유도 할 수 있음)
+    
+
+## 방법
+
+⇒ manifest.json과 service-worker.js 라는 파일 2개만 사이트 로컬 경로에 있으면 브라우저가 PWA로 인식
+
+**※ 프로젝트 생성 시!!**
+
+```jsx
+npx create-react-app 프로젝트명 --template cra-template-pwa
+```
+
+/index.js 로 간 후 
+
+```jsx
+serviceWorkerRegistraion.unregister();
+// ↑ 이 부분을
+serviceWorkerRegistraion.register();
+// 변경
+```
+
+그 후 
+
+```jsx
+yarn build / npm run build 
+```
+
+를 진행하게 되면 위에 말한 두 파일이 자동으로 생성
+
+여기까지 PWA 발행
+
+---
+
+## manifest.json / service-worker.js 파일 살펴보기
+
+- manifest.json ⇒ 웹앱의 아이콘, 이름, 테마색 이런 부분을 결정
+    
+    ```jsx
+    {
+      "version" : "사용하고 있는앱의 버전.. 예를 들면 1.12 이런거",
+      "short_name" : "설치 후 앱런처나 바탕화면에 표시할 짧은 12자 이름",
+      "name" : "기본이름",
+      "icons" : { 여러가지 사이즈별 아이콘 이미지 경로 },
+      "start_url" : "앱아이콘 눌렀을 시 보여줄 메인페이지 경로",
+      "display" : "standalone 아니면 fullscreen",
+      "background_color" : "앱 처음 실행시 잠깐 뜨는 splashscreen의 배경색",
+      "theme_color" : "상단 탭색상 등 원하는 테마색상",
+    }
+    ```
+    
+    등등 집어 넣을 수 있음
+    
+    ➕ version, scope 항목은 추가로 검색해보기
+    
+    ```jsx
+    <link rel="manifest" href="/manifest.webmanifest">
+    ```
+    
+    ⇒ 웹앱에서 사용하는 모든 html 
+    
+- service-worker.js
+    
+    ⇒ 기존의 앱 같은 건 설치할 때 스토어 가서 설치하면 앱 구동에 필요한 이미지, 데이터들이 전부 하드에 설치
+    
+    그 후 앱을 실행하면 앱 구성에 필요한 데이터를 서버에 요청하는 것이 아니라 하드에 이미 설치되어 있는 걸 그대로 가져와 씀
+    
+    이러한 것을 흉내내도록 도와주는 파일
+    
+    [참고 url]
+    
+    (공식 튜토리얼) https://developers.google.com/web/fundamentals/primers/service-workers
+    
+    (샘플) https://googlechrome.github.io/samples/service-worker/basic/
+    
+    ⇒ service worker 파일을 내가 만들고 싶다? 그때 참고
+    
+
+## PWA 커스터마이징
+
+1. **하드에 설치할 파일 중 HTML을 제외하기**
+    
+    node_modules/react-scripts/config/webpack.config.js 
+    
+    ```jsx
+    new WorkboxWebpackPlugin.InjectManifest({
+        swSrc,
+        dontCacheBustURLsMatching: /\.[0-9a-f]{8}\./,
+        exclude: [/\.map$/, /asset-manifest\.json$/, /LICENSE/], 
+    ```
+    
+    - exclude ⇒ 어떤 파일을 캐싱하지 않을 건지 결정하는 부분
+        
+        정규식으로 작성하는데 정규식과 일치하는 파일명을 제외합니다.
+        
+        그래서 원하는 HTML 파일을 여기 등록하시면 끝입니다.
+</details>
