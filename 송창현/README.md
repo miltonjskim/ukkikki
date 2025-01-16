@@ -346,3 +346,72 @@
 
 </details>
 
+
+<details>
+<summary>
+2025-01-16 styled component 와 tailwind css 의 차이
+</summary>
+## 1. Styled Components
+### 개념
+CSS-in-JS 라이브러리로, JavaScript 코드 안에서 CSS를 직접 작성할 수 있음
+styled-components 패키지를 사용하여 컴포넌트별로 스타일을 관리
+동적인 스타일 적용(props 기반 스타일 변경 등등)이 쉬움
+
+### 사용예시
+```
+import styled from "styled-components";
+
+const Button = styled.button`
+  background-color: ${(props) => (props.primary ? "blue" : "gray")};
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+`;
+
+function App() {
+  return <Button primary>Click Me</Button>;
+}
+```
+✅ 장점
+
+- 컴포넌트 단위 스타일링이 쉬움 (CSS 스코프 문제 해결)
+- JavaScript 로직과 함께 동적인 스타일 적용 가능
+- 별도의 CSS 파일 관리가 필요 없음
+
+❌ 단점
+
+- CSS 클래스 대신 컴포넌트를 생성해야 하므로 초기 설정이 필요
+- 스타일이 JavaScript 코드 안에 포함되므로 번들 크기 증가 가능
+- 정적인 스타일링에 불필요한 동적 처리가 발생할 수 있음
+
+## 2. Tailwind CSS
+
+### 개념
+- 유틸리티 퍼스트 CSS 프레임워크
+- className 속성에 미리 정의된 유틸리티 클래스를 사용하여 스타일 적용
+- 빠른 개발 속도와 일관된 디자인 유지 가능
+
+### 사용예시
+```
+function App() {
+  return (
+    <button className="bg-blue-500 text-white px-4 py-2 rounded">
+      Click Me
+    </button>
+  );
+}
+```
+
+✅ 장점
+
+- 미리 정의된 클래스를 조합하는 방식으로 빠른 스타일링 가능
+- CSS-in-JS보다 성능이 좋고 번들 크기가 작음
+- 디자인 시스템을 유지하기 쉬움
+
+❌ 단점
+
+- 클래스명이 길어질 수 있음 (가독성이 떨어질 수도 있음)
+- 커스텀 스타일 작성 시 Tailwind의 설정(Tailwind Config)을 수정해야 함
+- 학습 곡선이 있음 (유틸리티 클래스 암기 필요)
+</details>
+
