@@ -545,8 +545,95 @@ public interface EntityManager {
 
 
 # 4️⃣일차 : 2025-01-16(THU)
+
 <details>
-  <summary>Toggle Content</summary>
+  <summary>JPA 복습 4일차 - 엔티티 매핑 </summary>
+
+  # 1. @Entity
+
+- JPA를 사용해서 테이블과 매핑할 클래스 지정
+- name을 설정하지 않으면 클래스 이름 그대로 사용
+- @Entity 적용 시 주의 사항
+    - 기본 생성자는 필수(파라미터가 없는 public 또는 protected 생성자)
+        - JPA가 엔티티 객체 생성할 때 사용함
+    - final 클래스, enum, interface, inner 클래스에는 사용할 수 없다
+    - 저장할 필드에 final을 사용하면 안된다.
+
+# 2. @Table
+
+- 엔티티와 매핑할 테이블 지정
+- @Table 어노테이션 생략 시 엔티티 이름을 테이블 이름으로 사용
+
+# 3. 다양한 매핑 사용
+
+- @Enumerated : enum 타입 매핑
+- @Temporal : 날짜 타입 매핑
+- @Lob : CLOB, BLOB 타입 매핑
+
+# 4. 데이터베이스 스키마 자동 생성
+
+- JPA는 매핑 정보와 데이터베이스 방언을 사용해서  데이터베이스 스키마 자동으로 생성하는 기능 지원
+- persistence.xml에 스키마 자동 생성 속성 추가
+    
+    ```xml
+    <property name="hibernate.hbm2ddl.auto" value="create"/>
+    ```
+    
+    | 옵션 | 설명 |
+    | --- | --- |
+    | create | 기존 테이블 삭제하고 새로 생성 `DROP + CREATE` |
+    | create-drop | create 속성에 추가로 애플리케이션을 종료할 때 생성한 DDL 제거 `DROP + CREATE + DROP` |
+    | update | 데이터베이스 테이블과 엔티티 매핑정보를 비교해서 변경 사항만 수정 |
+    | validate | 데이터베이스 테이블과 엔티티 매핑정보를 비교해서 차이가 있으면 경고를 남기고 애플리케이션을 실행하지 않는다. `DDL 수정 안함` |
+    | none | 자동 생성 기능을 사용하지 않으려면 1. hibernate.hbm2ddl.auto 속성 자체를 삭제 2. 유효하지 않은 옵션 값을 줌 ex) none |
+- 애플리케이션 실행 시점에 데이터베이스 테이블을 자동으로 생성
+- 자동 생성되는 DDL은 지정한 데이터베이스 방언에 따라 달라진다.
+- 스키마 자동 생성 기능이 만든 DDL이 운영환경에 사용할만큼 완벽하지 않으므로 개발 환경에서 사용하거나 매핑 참고 용으로만 권장
+
+> **💡 개발 환경에 따른 스키마 자동생성 추천 전략**
+>
+> - **개발 초기 단계**: `create` 또는 `update`
+> - **초기화 상태로 자동화된 테스트를 진행하는 개발자 환경과 CI 서버**: `create` 또는 `create-drop`
+> - **테스트 서버**: `update` 또는 `validate`
+> - **스테이징과 운영 서버**: `validate` 또는 `none`
+
+---
+
+> **⚠️ 주의: `update`, `validate`는 JPA 표준에 없음**
+>
+> - JPA 표준 지원 옵션:  
+>   `none`, `create`, `drop-and-create`, `drop`
+
+---
+
+> **🛠️ 이름 매핑 전략 변경하기**
+>
+> - 자바 Camel Case ↔ 데이터베이스 Snake Case
+> - `@Column.name` 속성을 명시적으로 사용해서 이름 변경
+> - `hibernate.ejb.naming_strategy` 속성을 사용해 이름 매핑 전략 변경
+>
+>   ```xml
+>   <property name="hibernate.ejb.naming_strategy" value="org.hibernate.cfg.ImprovedNamingStrategy"/>
+>   ```
+
+
+# 5. DDL 생성 기능
+
+- 매핑 정보에 nullable, length와 같은 속성 값을 주어 DDL에 제약 조건을 추가할 수 있다
+    
+    ```java
+    @Column(name = "NAME", nullable = false, length = 10)
+    private String name;
+    ```
+    
+- DDL 제약 조건 관련 기능들은 단지 DDL을 자동 생성할 때만 사용되는 것이기 때문에 JPA 실행 로직에 영향을 미치지 않음
+    - 따라서 스키마 자동 생성 기능을 사용하지 않고 직접 DDL을 만든다면 굳이 사용할 이유가 없다.
+    
+    → 그럼에도 사용한다면 조금의 장점 : 애플리케이션 개발자가 엔티티만 보고도 손쉽게 다양한 제약 조건을 파악할 수 있다.
+</details>
+
+<details>
+  <summary>[피그마 특강 3일차] 프로토타입 & 프로토타이핑, GUI디자인 & UI Kit </summary>
   내용 4
 </details>
 
