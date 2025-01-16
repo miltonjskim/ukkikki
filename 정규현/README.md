@@ -170,3 +170,113 @@ STUN/TURN 서버를 활용하여 NAT를 우회하고 ICE를 통해 최적의 경
 - 중앙 서버가 없이 서로가 연결하여 데이터를 공유하기 때문에 중앙 서버 손실 시 데이터 회손에 대한 걱정이 없음
 - 다만 데이터를 나눠 가질 수 있는 연결된 컴퓨터가 많으면 많을 수록 전송 속도는 점점 빨라지지만, 반대로 연결된 컴퓨터의 수가 적으면 속도가 많이 저하됨
 - 또한, 개인의 정보 노출에 대한 피해가 발생할 수 있음.
+
+# 1월 16일
+# JPA (Java Persistence API)
+
+JPA는 Java 애플리케이션에서 객체 지향적인 방식으로 관계형 데이터베이스를 사용할 수 있도록 하는 **표준 API**입니다. ORM(Object-Relational Mapping) 기술의 일부로, 자바 객체와 데이터베이스 테이블 간의 매핑을 제공하여 개발자가 SQL 중심이 아닌 객체 중심으로 데이터베이스를 다룰 수 있게 합니다.
+
+---
+
+## JPA의 주요 특징
+
+1. **객체와 관계형 데이터베이스 매핑**
+   - JPA는 엔티티 클래스를 통해 데이터베이스 테이블과 매핑을 수행합니다. 개발자는 SQL 대신 자바 객체를 조작하며 데이터베이스 연산을 처리할 수 있습니다.
+
+2. **표준화**
+   - JPA는 자바 EE 표준 사양으로, Hibernate, EclipseLink, OpenJPA와 같은 구현체를 사용할 수 있습니다.
+   - 구현체를 교체해도 코드 변경 없이 동일한 방식으로 동작하도록 설계되었습니다.
+
+3. **JPQL (Java Persistence Query Language)**
+   - SQL과 유사한 문법을 가진 객체 지향 쿼리 언어로, 엔티티 객체를 기반으로 데이터베이스를 쿼리할 수 있습니다.
+
+4. **자동 매핑 및 관리**
+   - 테이블 생성, 매핑, 데이터 변경 등을 자동으로 처리합니다.
+   - 지연 로딩(Lazy Loading), 캐싱 등 최적화 기능을 제공합니다.
+
+---
+
+## JPA의 주요 구성 요소
+
+### 1. Entity
+- 데이터베이스 테이블에 매핑되는 자바 클래스.
+- `@Entity` 어노테이션을 사용하여 선언.
+
+```java
+@Entity
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+}
+```
+
+### 2. EntityManager
+- JPA에서 데이터베이스와의 모든 상호작용을 담당.
+- 엔티티 객체를 생성, 수정, 삭제, 조회하는 데 사용.
+- `EntityManagerFactory`를 통해 생성.
+
+### 3. Persistence Unit
+- `persistence.xml` 파일에서 JPA 설정을 정의.
+
+```xml
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
+    <persistence-unit name="my-persistence-unit">
+        <class>com.example.User</class>
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/mydb" />
+            <property name="javax.persistence.jdbc.user" value="root" />
+            <property name="javax.persistence.jdbc.password" value="password" />
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
+            <property name="hibernate.hbm2ddl.auto" value="update" />
+        </properties>
+    </persistence-unit>
+</persistence>
+```
+
+### 4. JPQL
+- 객체를 대상으로 하는 쿼리 언어.
+
+```java
+TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.name = :name", User.class);
+query.setParameter("name", "John");
+List<User> users = query.getResultList();
+```
+
+---
+
+## JPA의 장점
+
+1. **생산성**
+   - SQL 대신 객체 조작으로 비즈니스 로직 구현에 집중 가능.
+2. **유지보수성**
+   - 객체 모델과 데이터베이스 모델 간 매핑으로 코드 가독성 증가.
+3. **확장성**
+   - Hibernate, EclipseLink 등 다양한 구현체 사용 가능.
+4. **데이터베이스 독립성**
+   - 데이터베이스 변경 시 코드 변경 최소화.
+
+---
+
+## JPA의 단점
+
+1. **학습 곡선**
+   - 초기에 설정과 매핑 이해에 시간이 필요.
+2. **추상화 비용**
+   - 자동 생성된 SQL이 비효율적일 수 있음.
+3. **복잡한 쿼리**
+   - 복잡한 쿼리는 JPQL 대신 네이티브 SQL 사용이 필요할 수 있음.
+
+---
+
+## 주요 JPA 구현체
+
+1. **Hibernate**
+   - 가장 널리 사용되는 JPA 구현체.
+   - 다양한 추가 기능(캐싱, 배치 처리) 지원.
+2. **EclipseLink**
+   - Oracle이 지원하는 JPA 구현체.
+3. **OpenJPA**
+   - Apache에서 제공하는 JPA 구현체.
