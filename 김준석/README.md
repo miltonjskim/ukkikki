@@ -369,6 +369,235 @@ InnoDB는 MySQL의 기본 스토리지 엔진으로, 높은 성능과 안정성�
 
 ## 결론
 Document 형 NoSQL DB와 InnoDB는 각자의 강점과 사용 사례에 따라 적합한 선택을 해야 합니다. Document DB는 유연성과 확장성이 필요한 애플리케이션에, InnoDB는 트랜잭션 안전성과 정교한 인덱스 관리가 필요한 경우에 이상적입니다. 효과적인 데이터베이스 설계와 성능 튜닝은 성공적인 시스템 운영의 핵심입니다.
-
-
  </details> 
+
+<details>
+   <summary>
+   <strong>1월 17일 금요일</strong>
+   </summary>
+
+<details>
+   <summary>
+      MySQL에서 `TIMESTAMP`와 `DATETIME`
+   </summary>
+
+### 1. **범위**
+- **TIMESTAMP**:  
+  - `1970-01-01 00:00:01 UTC`부터 `2038-01-19 03:14:07 UTC`까지 저장 가능.  
+  - 이는 UNIX Epoch 시간 범위에 기반합니다.
+- **DATETIME**:  
+  - `1000-01-01 00:00:00`부터 `9999-12-31 23:59:59`까지 저장 가능.  
+  - 보다 넓은 날짜 범위를 지원합니다.
+
+---
+
+### 2. **시간대(Time Zone)**
+- **TIMESTAMP**:  
+  - MySQL 서버의 **시간대** 영향을 받습니다.  
+  - 데이터베이스에 저장 시 UTC로 변환되고, 조회 시 서버의 시간대 설정에 따라 변환됩니다.
+  - 시간대를 고려한 글로벌 애플리케이션에 적합합니다.
+- **DATETIME**:  
+  - 시간대와 무관하게 데이터를 그대로 저장합니다.  
+  - 시간대 변환이 필요 없는 경우 적합합니다.
+
+---
+
+### 3. **저장 크기**
+- **TIMESTAMP**:  
+  - 4 바이트를 사용하여 저장.  
+  - 크기가 작아 상대적으로 효율적입니다.
+- **DATETIME**:  
+  - 8 바이트를 사용하여 저장.  
+  - 추가 메모리가 필요합니다.
+
+---
+
+### 4. **기본값 및 자동 업데이트**
+- **TIMESTAMP**:  
+  - `DEFAULT CURRENT_TIMESTAMP`, `ON UPDATE CURRENT_TIMESTAMP`를 지원하여 삽입 또는 업데이트 시 자동으로 현재 시간을 설정 가능.  
+  - `NULL` 값으로도 기본값 설정 가능.
+- **DATETIME**:  
+  - MySQL 5.6.5부터 `DEFAULT CURRENT_TIMESTAMP` 및 `ON UPDATE CURRENT_TIMESTAMP` 지원.  
+  - 이전 버전에서는 명시적으로 값을 지정해야 함.
+
+---
+
+### 5. **사용 사례**
+- **TIMESTAMP**:
+  - 시간대가 중요한 데이터(예: 로그 기록, 이벤트 시간).
+  - 자동 시간 기록 기능이 필요한 경우.
+- **DATETIME**:
+  - 시간대와 관계없는 데이터(예: 예약 날짜, 기념일).
+  - 매우 먼 과거나 미래의 날짜를 저장해야 하는 경우.
+
+---
+
+### 비교 표
+
+| 특징                     | TIMESTAMP                      | DATETIME                     |
+|--------------------------|--------------------------------|-----------------------------|
+| **범위**                 | 1970-01-01 ~ 2038-01-19       | 1000-01-01 ~ 9999-12-31     |
+| **시간대 영향**          | O                              | X                           |
+| **저장 크기**            | 4 바이트                      | 8 바이트                    |
+| **기본값 지원**          | `CURRENT_TIMESTAMP` 지원       | MySQL 5.6.5 이상 지원       |
+| **사용 사례**            | 로그, 이벤트 기록              | 일정, 기념일, 역사적 데이터 |
+
+---
+
+### 요약
+- **시간대가 중요**하고 저장 공간을 절약해야 한다면 `TIMESTAMP`
+- **시간대와 무관**한 데이터를 저장하거나 넓은 날짜 범위를 필요로 한다면 `DATETIME`
+</details>
+
+<details>
+   <summary>
+   일반 유저와 기업 유저의 테이블 구분 전략(JPA와 Spring Security를 고려)
+   </summary>
+
+   주어진 상황에서 일반 사용자(`normal_users`)와 기업 사용자(`company_users`)를 어플리케이션 단에서 구분하고, 이를 JPA 및 Spring Security에서 효과적으로 처리하기 위해 다음과 같은 설계를 고려할 수 있습니다.
+
+---
+
+## 1. **테이블 설계**
+### **1-1. 단일 테이블 전략 (Single Table)**
+하나의 `users` 테이블에 모든 사용자를 저장하되, 추가적으로 `user_type` 필드를 두어 사용자를 구분
+
+#### 테이블 구조
+| Column      | Type     | Description                   |
+|-------------|----------|-------------------------------|
+| id          | VARCHAR  | 사용자 고유 ID               |
+| pwd         | VARCHAR  | 비밀번호                     |
+| user_type   | ENUM     | 사용자 유형 (`NORMAL`/`COMPANY`) |
+| comp_id     | VARCHAR  | 기업 사용자용 추가 정보       |
+
+#### 장점
+- **간단한 설계**: 모든 사용자 데이터가 하나의 테이블에 있어 유지보수와 쿼리 작성이 단순
+- **확장성**: Spring Security에서 사용자 유형을 `user_type`으로 쉽게 구분하여 권한을 처리
+
+#### 단점
+- `comp_id`는 일반 사용자에게 항상 `NULL`
+- 테이블이 커질 경우 성능 이슈가 발생할 가능성
+
+---
+
+### **1-2. 상속 구조 전략 (Table per Class)**
+슈퍼 테이블 `users`를 두고, `normal_users`와 `company_users`를 각각 별도 테이블로 분리하며 JPA의 상속 매핑 전략을 사용
+
+#### 테이블 구조
+1. `users` (슈퍼클래스)
+   | Column      | Type     | Description       |
+   |-------------|----------|-------------------|
+   | id          | VARCHAR  | 사용자 고유 ID   |
+   | pwd         | VARCHAR  | 비밀번호         |
+
+2. `normal_users` (일반 사용자 서브클래스)
+   | Column      | Type     | Description        |
+   |-------------|----------|--------------------|
+   | id          | VARCHAR  | `users`의 ID (FK) |
+
+3. `company_users` (기업 사용자 서브클래스)
+   | Column      | Type     | Description        |
+   |-------------|----------|--------------------|
+   | id          | VARCHAR  | `users`의 ID (FK) |
+   | comp_id     | VARCHAR  | 기업 ID           |
+
+#### 장점
+- **데이터 정규화**: 각 테이블이 해당 도메인에 맞는 데이터를 저장하므로 `NULL` 값이 없음
+- **확장성**: 일반 사용자와 기업 사용자를 독립적으로 관리할 수 있음
+- **JPA 상속**: Spring Security에서 `@Inheritance`를 사용하여 편리하게 사용자 유형을 처리할 수 있음
+
+#### 단점
+- 테이블 조인이 필요해 복잡도가 증가할 수 있음
+- 모든 사용자를 조회할 때 성능 저하 가능성이 있음
+
+---
+
+### **1-3. 두 테이블 전략 (Separate Tables)**
+`normal_users`와 `company_users`를 완전히 별도 테이블로 구성하고, 두 테이블을 분리하여 관리
+
+#### 테이블 구조
+1. `normal_users`
+   | Column      | Type     | Description      |
+   |-------------|----------|------------------|
+   | id          | VARCHAR  | 사용자 고유 ID  |
+   | pwd         | VARCHAR  | 비밀번호        |
+
+2. `company_users`
+   | Column      | Type     | Description      |
+   |-------------|----------|------------------|
+   | id          | VARCHAR  | 사용자 고유 ID  |
+   | pwd         | VARCHAR  | 비밀번호        |
+   | comp_id     | VARCHAR  | 기업 ID         |
+
+#### 장점
+- **독립성**: 일반 사용자와 기업 사용자를 완전히 분리하여 관리
+- **단순성**: 필요에 따라 각각의 테이블에 대해 최적화된 쿼리를 작성
+
+#### 단점
+- Spring Security에서 별도 사용자 저장소(`UserDetailsService`)를 구현해야 하므로 개발 부담이 커짐
+- 두 테이블을 합쳐서 조회해야 하는 경우 복잡성이 증가
+
+---
+
+## 2. **Spring Security와 JPA 설계**
+### **2-1. 단일 테이블 전략**
+- `user_type` 필드를 기준으로 사용자 유형을 구분
+- Spring Security의 `GrantedAuthority`를 활용해 권한을 설정
+
+```java
+@Entity
+@Table(name = "users")
+public class User {
+    @Id
+    private String id;
+    private String pwd;
+    @Enumerated(EnumType.STRING)
+    private UserType userType; // NORMAL, COMPANY
+    private String compId; // 기업 사용자만 사용
+}
+```
+
+### **2-2. 상속 구조 전략**
+- JPA 상속을 사용하여 `users` 슈퍼클래스와 서브클래스를 구성
+- Spring Security에서 서브클래스를 `UserDetails`로 매핑
+
+```java
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "users")
+public abstract class User {
+    @Id
+    private String id;
+    private String pwd;
+}
+
+@Entity
+@Table(name = "normal_users")
+public class NormalUser extends User {
+    // 일반 사용자용 필드 추가 가능
+}
+
+@Entity
+@Table(name = "company_users")
+public class CompanyUser extends User {
+    private String compId; // 기업 사용자용 필드
+}
+```
+
+### **2-3. 두 테이블 전략**
+- 두 개의 `UserDetailsService` 구현체를 작성하여 각각 `normal_users`와 `company_users`를 처리합니다.
+- Spring Security에서 요청에 따라 적절한 서비스로 라우팅
+
+---
+
+## 3. **권장 설계**
+- **사용자 간의 관계가 거의 없고 분리된 처리가 중요하다면:** **두 테이블 전략**.
+- **공통된 처리가 많고 사용자가 자주 혼합되어 조회된다면:** **단일 테이블 전략**.
+- **유지보수성과 확장성을 고려하면서 데이터 정규화가 중요하다면:** **상속 구조 전략**.
+
+---
+
+</details>
+
+
+</details>
