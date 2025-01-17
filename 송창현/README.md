@@ -414,3 +414,56 @@ function App() {
 - 학습 곡선이 있음 (유틸리티 클래스 암기 필요)
 </details>
 
+<details>
+<summary>2025-01-17 프론트 와이어프레임 작업(figma)</summary>
+
+## 와이어프레임 FIGMA
+
+[FIGMA 링크](https://www.figma.com/design/Y6gwYWBepPRNpY430a2Z3N/%EC%9A%B0%EB%81%BC%EB%81%BC!?node-id=84-2&t=JRtyUkmbT9zHUaVh-1)
+
+- 프론트엔드 UX 고민하며 간략적인 와이어프레임 설계
+- 디자인 초안이라 대략적인 뼈대위주로 잡음
+
+## 프론트엔드 라이브러리
+### Zustand
+✅ 특징
+- Zustand는 React 상태 관리를 위한 경량 라이브러리
+- Redux보다 가볍고 러닝커브도 낮음
+- 전역상태관리 공유가 context api없이 가능함
+
+✅ 사용예시
+```
+import create from 'zustand';
+
+const useStore = create((set) => ({
+  count: 0,
+  increase: () => set((state) => ({ count: state.count + 1 })),
+}));
+
+function Counter() {
+  const { count, increase } = useStore();
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={increase}>Increase</button>
+    </div>
+  );
+}
+
+```
+
+### Tailwind 
+
+✅ 특징
+- 고유한 클래스명을 조합시켜 빠른 스타일링
+- 반응형 디자인
+- 재사용성 높음
+
+✅ 사용예시
+```
+<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+  Click me
+</button>
+```
+
+</details>
