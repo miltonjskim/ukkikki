@@ -288,7 +288,6 @@ List<User> users = query.getResultList();
 # 1월 17일
 
 ## DB 설계
----
 
 ### datetime vs timestamp ?
     - timestamp 장점
@@ -301,7 +300,7 @@ List<User> users = query.getResultList();
     
     보기좋은 시간 → datetime
     
----
+
 ## DB 테이블 설계
 
 - 일반 사용자 - 기업 사용자 테이블 전략에 대한 고민
