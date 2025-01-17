@@ -85,7 +85,7 @@
    - **재료 구매 연동**: 호스트가 제공한 재료 목록을 손쉽게 연동된 쇼핑 사이트에서 구매할 수 있는 기능을 제공합니다.
 
 ---
-
+</details>
 
 <details>
   <summary>
@@ -131,6 +131,8 @@ ICE(Interactive Connectivity Establishment) 프레임워크를 사용해서 최�
 2. HTML5: HTML5를 통해 웹페이지에서 미디어 스트림을 표시하거나 관리할 수 있습니다.
 
 3. STUN/TURN 서버: WebRTC는 NAT를 우회하는 기술이 필요한데, STUN과 TURN 서버를 사용하여 연결을 설정합니다. STUN 서버는 클라이언트의 공인 IP 주소를 찾고, TURN 서버는 중계 서버 역할을 합니다.
+</details>
+
 
 <details>
   <summary>
@@ -210,6 +212,8 @@ Prometheus는 오픈 소스 시스템 모니터링 및 알림 도구입니다.
 - **데이터 수집 (Retrieval)**: 모니터링 대상(target)에서 메트릭 데이터를 HTTP 프로토콜로 Pull(끌어오기) 방식으로 가져옵니다.
 - **데이터 저장 (TSDB)**: 수집된 데이터를 **시간 시리즈 데이터베이스(Time Series Database)**에 저장합니다.
 - **HTTP 서버**: 쿼리 언어(PromQL)를 통해 데이터를 조회하거나 외부 도구(Grafana 등)에서 데이터를 요청할 수 있도록 API를 제공합니다.
+
+</details>
 
 <details>
   <summary>
@@ -326,4 +330,5 @@ public synchronized void start() {
 2. `blocker`의 `interrupt()` 메소드를 호출하여 차단된 스레드에 인터럽트를 발생시킵니다.
 3. 메소드가 종료됩니다.
 
+</details>
 
