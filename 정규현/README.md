@@ -1,6 +1,8 @@
 # 1월 13일 
 
-# 자취 커뮤니티(1인 가구)
+# 아이디어 도출 회의 
+
+## 자취 커뮤니티(1인 가구)
 
 ---
 
@@ -129,7 +131,6 @@ WebRTC(Web Real-Time Communication)는 별도의 소프트웨어 설치 없이 �
 1. **STUN 서버**: 클라이언트의 Public IP 및 포트 정보를 반환.
 2. **TURN 서버**: P2P 연결이 불가능할 경우 데이터를 릴레이.
 
-STUN/TURN 서버를 활용하여 NAT를 우회하고 ICE를 통해 최적의 경로를 탐색하며, 이 과정을 "시그널링"이라고 합니다.
 
 ---
 # 1월 15일
@@ -174,25 +175,27 @@ STUN/TURN 서버를 활용하여 NAT를 우회하고 ICE를 통해 최적의 경
 # 1월 16일
 # JPA (Java Persistence API)
 
-JPA는 Java 애플리케이션에서 객체 지향적인 방식으로 관계형 데이터베이스를 사용할 수 있도록 하는 **표준 API**입니다. ORM(Object-Relational Mapping) 기술의 일부로, 자바 객체와 데이터베이스 테이블 간의 매핑을 제공하여 개발자가 SQL 중심이 아닌 객체 중심으로 데이터베이스를 다룰 수 있게 합니다.
+- JPA는 Java 애플리케이션에서 객체 지향적인 방식으로 관계형 데이터베이스를 사용할 수 있도록 하는 **표준 API**. 
+- ORM(Object-Relational Mapping) 기술의 일부로, 자바 객체와 데이터베이스 테이블 간의 매핑을 제공하여 개발자가 SQL 중심이 아닌 객체 중심으로 데이터베이스 다룸
 
 ---
 
 ## JPA의 주요 특징
 
 1. **객체와 관계형 데이터베이스 매핑**
-   - JPA는 엔티티 클래스를 통해 데이터베이스 테이블과 매핑을 수행합니다. 개발자는 SQL 대신 자바 객체를 조작하며 데이터베이스 연산을 처리할 수 있습니다.
+   - JPA는 엔티티 클래스를 통해 데이터베이스 테이블과 매핑을 수행. 
+   - 개발자는 SQL 대신 자바 객체를 조작하며 데이터베이스 연산을 처리할 수 있음음.
 
 2. **표준화**
-   - JPA는 자바 EE 표준 사양으로, Hibernate, EclipseLink, OpenJPA와 같은 구현체를 사용할 수 있습니다.
-   - 구현체를 교체해도 코드 변경 없이 동일한 방식으로 동작하도록 설계되었습니다.
+   - JPA는 자바 EE 표준 사양으로, Hibernate, EclipseLink, OpenJPA와 같은 구현체를 사용.
+   - 구현체를 교체해도 코드 변경 없이 동일한 방식으로 동작하도록 설계되어있음음.
 
 3. **JPQL (Java Persistence Query Language)**
-   - SQL과 유사한 문법을 가진 객체 지향 쿼리 언어로, 엔티티 객체를 기반으로 데이터베이스를 쿼리할 수 있습니다.
+   - SQL과 유사한 문법을 가진 객체 지향 쿼리 언어로, 엔티티 객체를 기반으로 데이터베이스를 쿼리할 수 있음음.
 
 4. **자동 매핑 및 관리**
-   - 테이블 생성, 매핑, 데이터 변경 등을 자동으로 처리합니다.
-   - 지연 로딩(Lazy Loading), 캐싱 등 최적화 기능을 제공합니다.
+   - 테이블 생성, 매핑, 데이터 변경 등을 자동으로 처리.
+   - 지연 로딩(Lazy Loading), 캐싱 등 최적화 기능을 제공.
 
 ---
 
@@ -280,3 +283,189 @@ List<User> users = query.getResultList();
    - Oracle이 지원하는 JPA 구현체.
 3. **OpenJPA**
    - Apache에서 제공하는 JPA 구현체.
+
+---
+# 1월 17일
+
+## DB 설계
+---
+
+### datetime vs timestamp ?
+    - timestamp 장점
+        - 서버 시간 반영이 바로 된다
+    - timestamp 단점
+        - 1970-01-01 00:00:01 ~ 2038-01-19 08:44:07까지의 데이터만 지원
+        - timestamp 타입을 갖는 쿼리는 캐시로 저장되나 Datetime 타입을 갖는 쿼리는 캐시로 저장되지 않는다.
+    
+    시스템적 로그 → timestamp
+    
+    보기좋은 시간 → datetime
+    
+---
+## DB 테이블 설계
+
+- 일반 사용자 - 기업 사용자 테이블 전략에 대한 고민
+    
+    ## 1. **테이블 설계**
+    
+    ### **1-1. 단일 테이블 전략 (Single Table)**
+    
+    하나의 `users` 테이블에 모든 사용자를 저장하되, 추가적으로 `user_type` 필드를 두어 사용자를 구분.
+    
+    ### 테이블 구조
+    
+    | Column | Type | Description |
+    | --- | --- | --- |
+    | id | VARCHAR | 사용자 고유 ID |
+    | pwd | VARCHAR | 비밀번호 |
+    | user_type | ENUM | 사용자 유형 (`NORMAL`/`COMPANY`) |
+    | comp_id | VARCHAR | 기업 사용자용 추가 정보 |
+    
+    ### 장점
+    
+    - **간단한 설계**: 모든 사용자 데이터가 하나의 테이블에 있어 유지보수와 쿼리 작성이 단순.
+    - **확장성**: Spring Security에서 사용자 유형을 `user_type`으로 쉽게 구분하여 권한을 처리.
+    
+    ### 단점
+    
+    - `comp_id`는 일반 사용자에게 항상 `NULL`.
+    - 테이블이 커질 경우 성능 이슈가 발생 가능능.
+    
+    ---
+    
+    ### **1-2. 상속 구조 전략 (Table per Class)**
+    
+    슈퍼 테이블 `users`를 두고, `normal_users`와 `company_users`를 각각 별도 테이블로 분리하며 JPA의 상속 매핑 전략.
+    
+    ### 테이블 구조
+    
+    1. `users` (슈퍼클래스)
+        
+        
+        | Column | Type | Description |
+        | --- | --- | --- |
+        | id | VARCHAR | 사용자 고유 ID |
+        | pwd | VARCHAR | 비밀번호 |
+    2. `normal_users` (일반 사용자 서브클래스)
+        
+        
+        | Column | Type | Description |
+        | --- | --- | --- |
+        | id | VARCHAR | `users`의 ID (FK) |
+    3. `company_users` (기업 사용자 서브클래스)
+        
+        
+        | Column | Type | Description |
+        | --- | --- | --- |
+        | id | VARCHAR | `users`의 ID (FK) |
+        | comp_id | VARCHAR | 기업 ID |
+    
+    ### 장점
+    
+    - **데이터 정규화**: 각 테이블이 해당 도메인에 맞는 데이터를 저장하므로 `NULL` 값이 없음.
+    - **확장성**: 일반 사용자와 기업 사용자를 독립적으로 관리 가능.
+    - **JPA 상속**: Spring Security에서 `@Inheritance`를 사용하여 편리하게 사용자 유형을 처리리.
+    
+    ### 단점
+    
+    - 테이블 조인이 필요해 복잡도가 증가할 수 있음.
+    - 모든 사용자를 조회할 때 성능 저하 가능성이 있음음.
+    
+    ---
+    
+    ### **1-3. 두 테이블 전략 (Separate Tables)**
+    
+    `normal_users`와 `company_users`를 완전히 별도 테이블로 구성하고, 두 테이블을 분리하여 관리.
+    
+    ### 테이블 구조
+    
+    1. `normal_users`
+        
+        
+        | Column | Type | Description |
+        | --- | --- | --- |
+        | id | VARCHAR | 사용자 고유 ID |
+        | pwd | VARCHAR | 비밀번호 |
+    2. `company_users`
+        
+        
+        | Column | Type | Description |
+        | --- | --- | --- |
+        | id | VARCHAR | 사용자 고유 ID |
+        | pwd | VARCHAR | 비밀번호 |
+        | comp_id | VARCHAR | 기업 ID |
+    
+    ### 장점
+    
+    - **독립성**: 일반 사용자와 기업 사용자를 완전히 분리하여 관리할 수 있음.
+    - **단순성**: 필요에 따라 각각의 테이블에 대해 최적화된 쿼리를 작성할 수 있음음.
+    
+    ### 단점
+    
+    - Spring Security에서 별도 사용자 저장소(`UserDetailsService`)를 구현해야 하므로 개발 부담이 커짐짐.
+    - 두 테이블을 합쳐서 조회해야 하는 경우 복잡성이 증가.
+    
+    ---
+    
+    ## 2. **Spring Security와 JPA 설계**
+    
+    ### **2-1. 단일 테이블 전략**
+    
+    - `user_type` 필드를 기준으로 사용자 유형을 구분.
+    - Spring Security의 `GrantedAuthority`를 활용해 권한을 설정.
+    
+    ```java
+    @Entity
+    @Table(name = "users")
+    public class User {
+        @Id
+        private String id;
+        private String pwd;
+        @Enumerated(EnumType.STRING)
+        private UserType userType; // NORMAL, COMPANY
+        private String compId; // 기업 사용자만 사용
+    }
+    
+    ```
+    
+    ### **2-2. 상속 구조 전략**
+    
+    - JPA 상속을 사용하여 `users` 슈퍼클래스와 서브클래스를 구성.
+    - Spring Security에서 서브클래스를 `UserDetails`로 매핑.
+    
+    ```java
+    @Entity
+    @Inheritance(strategy = InheritanceType.JOINED)
+    @Table(name = "users")
+    public abstract class User {
+        @Id
+        private String id;
+        private String pwd;
+    }
+    
+    @Entity
+    @Table(name = "normal_users")
+    public class NormalUser extends User {
+        // 일반 사용자용 필드 추가 가능
+    }
+    
+    @Entity
+    @Table(name = "company_users")
+    public class CompanyUser extends User {
+        private String compId; // 기업 사용자용 필드
+    }
+    
+    ```
+    
+    ### **2-3. 두 테이블 전략**
+    
+    - 두 개의 `UserDetailsService` 구현체를 작성하여 각각 `normal_users`와 `company_users`를 처리.
+    - Spring Security에서 요청에 따라 적절한 서비스로 라우팅.
+    
+    ---
+    
+    ## 3. **권장 설계**
+    
+    - **사용자 간의 관계가 거의 없고 분리된 처리가 중요하다면:** **두 테이블 전략**.
+    - **공통된 처리가 많고 사용자가 자주 혼합되어 조회된다면:** **단일 테이블 전략**.
+    - **유지보수성과 확장성을 고려하면서 데이터 정규화가 중요하다면:** **상속 구조 전략**.
