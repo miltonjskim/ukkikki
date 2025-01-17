@@ -367,3 +367,11 @@
 ![image-24.png](./image-24.png)
 ![image-25.png](./image-25.png)
 </details>
+
+<details>
+  <summary>와이어프레임 초안</summary>
+
+- **링크**: [Figma 와이어프레임 초안](https://www.figma.com/design/Y6gwYWBepPRNpY430a2Z3N/%EC%9A%B0%EB%81%BC%EB%81%BC!?node-id=84-2&t=FpOKamSrJTqRuCBu-1)
+![image-26.png](./image-26.png)
+
+</details>
