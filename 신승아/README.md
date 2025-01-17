@@ -104,7 +104,7 @@
 
 ⇒ 사용자가 **전체 여행 계획**을 **자유롭게 설정**하고, 자신만의 여행 스타일에 맞춘 일정, 활동, 숙박 등을 완전히 개인화할 수 있습니다. 
 
-## 💻백(GPT)
+## 백(GPT)
 
 1. 매칭 시스템
     
@@ -129,7 +129,7 @@
     → 동기화된 데이터 관리로 실시간으로 일정 변경 및 업데이트 반영
     
 
-## 💻프론트(GPT)
+## 프론트(GPT)
 
 1. 사용자 인터페이스 디자인
     
@@ -215,7 +215,7 @@ peerConnection.ontrack = (event) => {
   2025-01-14 
 </summary>
 
-  # 아이디어 기획
+  # 💻 아이디어 기획
 
   - [아이디어 고도화](https://www.figma.com/board/2zJB2KigZgpFTxEPSVnbUj/%EA%B8%B0%EB%8A%A5-%EA%B3%A0%EB%8F%84%ED%99%94?node-id=0-1&p=f&t=KL81nPwpbUIYEwFs-0)
 
@@ -414,7 +414,7 @@ git revert 커밋아이디
   2025-01-15 
 </summary>
   
-  # Jira
+  # 💻 Jira
 
   = 프로젝트 관리 및 이슈 추적 시스템
 
@@ -705,4 +705,128 @@ yarn build / npm run build
         정규식으로 작성하는데 정규식과 일치하는 파일명을 제외합니다.
         
         그래서 원하는 HTML 파일을 여기 등록하시면 끝입니다.
+</details>
+
+<details>
+<summary>
+  2025-01-17 
+</summary>
+
+# 💻 프론트
+  - [와이어 프레임](https://www.figma.com/design/Y6gwYWBepPRNpY430a2Z3N/%EC%9A%B0%EB%81%BC%EB%81%BC!?node-id=84-2&p=f&t=4QrMS1PVLGHYU2hm-0)
+   => 프로젝트의 흐름을 대략적으로 구성한 후 디자인 할 예정
+
+# 💻 백엔드
+  - [ERD](https://www.erdcloud.com/d/prF7Dk9f9aDdtQqLy)
+  => 기능 명세서를 기반으로 ERD 작성
+
+# 개인 공부
+  => 프로젝트를 진행하는데 사용 할 프레임워크를 정함
+
+
+    예상) 1. zustand 
+          2.tailwind
+
+  # Tailwind css
+
+= 유틸리티-퍼스트(utility-first) CSS 프레임워크로, HTML에 직접 클래스들을 추가하여 스타일을 구성하는 방식
+
+- 기존 css와 차이점
+    
+    ⇒ 특정 스타일을 클래스 이름으로 표현하고 이를 조합하여 원하는 디자인을 빠르게 구현할 수 있음
+    
+    1. 기존 css
+    
+    ```jsx
+    .card {
+      width: 300px;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: #f5f5f5;
+    }
+    
+    .card h2 {
+      font-size: 1.5rem;
+      color: #333;
+    }
+    
+    .card p {
+      font-size: 1rem;
+      color: #666;
+    }
+    ```
+    
+    ⇒ css 파일을 분리하여 관리하고, 각 요소의 스타일을 클래스로 정의한 후 HTML에서 적용.
+    
+    스타일을 재사용할 수 있으나, 코드가 길어져서 복잡해지기 쉬우며, 각 클래스가 무엇을 의미하는지 바로 알기 어려움
+    
+    1. Tailwind CSS (유틸리티- 퍼스트 방식)
+    
+    ```jsx
+    <div class="w-72 p-5 rounded-lg bg-gray-200">
+      <h2 class="text-xl text-gray-800">Title</h2>
+      <p class="text-base text-gray-600">Description text</p>
+    </div>
+    
+    ```
+    
+    ⇒ HTML 요소에 직접 적용하여 스타일 구성 가능
+    
+
+## 사용 방법
+
+### npm
+
+1. Tailwind CSS 설치
+
+```jsx
+npm install -D tailwindcss postcss autoprefixer
+
+```
+
+1. Tailwind 설정 파일 생성
+
+```jsx
+npx tailwindcss init
+```
+
+1. PostCSS 설정 파일 생성
+    
+    ⇒ (Tailwind와 PostCSS를 연결)
+    프로젝트 루트 디렉터리에 postcss.config.js 파일을 생성하고 다음 내용을 추가
+    
+
+```jsx
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+}
+
+```
+
+1. Tailwind의 기본 CSS 파일 생성
+    
+    ⇒src 폴더에 styles.css 파일을 생성하고, 아래와 같이 Tailwind CSS를 임포트
+    
+
+```jsx
+// src/styles.css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+### Tailwind CDN
+
+```jsx
+// Tailwind CSS CDN 링크 
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+```
+
+## Tailwind CSS 구성
+
+⇒ tailwind.config.js 파일을 통해 커스터마이징
+
 </details>
