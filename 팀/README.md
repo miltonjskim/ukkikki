@@ -355,6 +355,9 @@
 
 </details>
 
+
+
+# 5️⃣일차 : 2025-01-17(FRI)
 <details>
   <summary>기능명세서 Ver0.1</summary>
 ![image-20.png](./image-20.png)
@@ -363,10 +366,4 @@
 ![image-23.png](./image-23.png)
 ![image-24.png](./image-24.png)
 ![image-25.png](./image-25.png)
-</details>
-
-# 5️⃣일차 : 2025-01-17(FRI)
-<details>
-  <summary>Toggle Content</summary>
-  내용 5
 </details>
