@@ -1,22 +1,19 @@
 package com.dancing_orangutan.ukkikki.place;
 
 import com.dancing_orangutan.ukkikki.entity.travelPlan.TravelPlan;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "places")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class PlaceEntity {
 
 	@Id
@@ -36,6 +33,6 @@ public class PlaceEntity {
 	private double longitude;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "travel_plan_id")
+	@JoinColumn(name = "travel_plan_id", nullable = false)
 	private TravelPlan travelPlan;
 }

@@ -2,15 +2,20 @@ package com.dancing_orangutan.ukkikki.place;
 
 import com.dancing_orangutan.ukkikki.entity.member.Member;
 import com.dancing_orangutan.ukkikki.placeTag.PlaceTag;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.util.Set;
 
+@Builder
+@Getter
 public class Place {
 
     Integer placeId;
     String name;
     String address;
-    Location location;
+    double latitude;
+    double longitude;
     Set<Integer> placeTagIds;
 
     public void addTag(String tagName, Member member) {

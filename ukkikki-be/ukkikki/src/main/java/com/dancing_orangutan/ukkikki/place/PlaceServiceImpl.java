@@ -1,5 +1,6 @@
 package com.dancing_orangutan.ukkikki.place;
 
+import com.dancing_orangutan.ukkikki.place.dto.CreatePlaceCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -8,4 +9,10 @@ import org.springframework.stereotype.Service;
 public class PlaceServiceImpl implements PlaceService {
 
     private final PlaceRepository placeRepository;
+
+    @Override
+    public void save(CreatePlaceCommand command) {
+
+
+    }
 }
