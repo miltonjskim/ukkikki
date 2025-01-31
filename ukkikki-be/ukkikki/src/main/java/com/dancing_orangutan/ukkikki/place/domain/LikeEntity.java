@@ -1,4 +1,4 @@
-package com.dancing_orangutan.ukkikki.place;
+package com.dancing_orangutan.ukkikki.place.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;

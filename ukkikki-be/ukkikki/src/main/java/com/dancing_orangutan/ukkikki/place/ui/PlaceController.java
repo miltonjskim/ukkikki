@@ -1,7 +1,8 @@
-package com.dancing_orangutan.ukkikki.place;
+package com.dancing_orangutan.ukkikki.place.ui;
 
 import com.dancing_orangutan.ukkikki.global.response.ApiUtils;
 import com.dancing_orangutan.ukkikki.global.response.ApiUtils.ApiResponse;
+import com.dancing_orangutan.ukkikki.place.application.PlaceService;
 import com.dancing_orangutan.ukkikki.place.dto.CreatePlaceCommand;
 import com.dancing_orangutan.ukkikki.place.dto.CreatePlaceRequest;
 import lombok.RequiredArgsConstructor;

@@ -1,9 +1,8 @@
-package com.dancing_orangutan.ukkikki.place;
+package com.dancing_orangutan.ukkikki.place.domain;
 
 import com.dancing_orangutan.ukkikki.entity.travelPlan.TravelPlan;
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
