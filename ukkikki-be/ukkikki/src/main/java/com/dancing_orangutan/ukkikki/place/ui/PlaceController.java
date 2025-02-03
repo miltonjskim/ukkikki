@@ -87,4 +87,12 @@ public class PlaceController {
             return ApiUtils.error("여행 계획 장소 태그 등록 중 오류가 발생했습니다.", e, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/places/{placeId}/tags")
+    public ApiResponse<?> getPlaceTags(@PathVariable Integer travelPlanId,
+                                       @PathVariable Integer placeId,
+                                       @AuthenticationPrincipal MemberUserDetails userDetails) {
+
+
+    }
 }
