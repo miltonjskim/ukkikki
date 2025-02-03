@@ -3,8 +3,8 @@ package com.dancing_orangutan.ukkikki.place.ui;
 import com.dancing_orangutan.ukkikki.global.response.ApiUtils;
 import com.dancing_orangutan.ukkikki.global.response.ApiUtils.ApiResponse;
 import com.dancing_orangutan.ukkikki.place.application.PlaceService;
-import com.dancing_orangutan.ukkikki.place.dto.CreatePlaceCommand;
-import com.dancing_orangutan.ukkikki.place.dto.CreatePlaceRequest;
+import com.dancing_orangutan.ukkikki.place.application.command.CreatePlaceCommand;
+import com.dancing_orangutan.ukkikki.place.ui.request.CreatePlaceRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

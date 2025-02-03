@@ -1,6 +1,6 @@
 package com.dancing_orangutan.ukkikki.place.application;
 
-import com.dancing_orangutan.ukkikki.place.dto.CreatePlaceCommand;
+import com.dancing_orangutan.ukkikki.place.application.command.CreatePlaceCommand;
 import com.dancing_orangutan.ukkikki.place.infrastructure.PlaceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

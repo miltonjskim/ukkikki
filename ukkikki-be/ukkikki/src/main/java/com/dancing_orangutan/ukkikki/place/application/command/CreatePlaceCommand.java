@@ -1,4 +1,4 @@
-package com.dancing_orangutan.ukkikki.place.dto;
+package com.dancing_orangutan.ukkikki.place.application.command;
 
 import lombok.Builder;
 

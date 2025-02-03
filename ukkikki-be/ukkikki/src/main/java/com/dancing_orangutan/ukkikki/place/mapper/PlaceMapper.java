@@ -1,4 +1,4 @@
-package com.dancing_orangutan.ukkikki.place.util;
+package com.dancing_orangutan.ukkikki.place.mapper;
 
 import com.dancing_orangutan.ukkikki.place.domain.Place;
 import com.dancing_orangutan.ukkikki.place.domain.PlaceEntity;
