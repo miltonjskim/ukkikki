@@ -1,6 +1,9 @@
 package com.dancing_orangutan.ukkikki.travelPlan.ui.request;
 
 import com.dancing_orangutan.ukkikki.travelPlan.application.command.CreateTravelPlanCommand;
+import com.dancing_orangutan.ukkikki.travelPlan.ui.CompanionUi;
+import com.dancing_orangutan.ukkikki.travelPlan.ui.KeywordUi;
+import com.dancing_orangutan.ukkikki.travelPlan.ui.TravelPlanInfoUi;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,8 +14,7 @@ public class CreateTravelPlanRequest {
 
 	private TravelPlanInfoUi travelPlan;
 
-	private HostUi host;
-
+	private CompanionUi host;
 
 	public CreateTravelPlanCommand toCommand(Integer memberId) {
 		validate(memberId);

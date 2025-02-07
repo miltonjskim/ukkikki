@@ -1,25 +1,37 @@
 package com.dancing_orangutan.ukkikki.travelPlan.application.command;
 
+import com.dancing_orangutan.ukkikki.travelPlan.domain.memberTravel.MemberTravelPlan;
+import com.dancing_orangutan.ukkikki.travelPlan.domain.travelPlan.TravelPlan;
+import com.dancing_orangutan.ukkikki.travelPlan.domain.travelPlan.TravelPlanInfo;
 import lombok.Builder;
-import lombok.Getter;
 
-@Getter
-public class JoinTravelPlanCommand {
+import java.util.List;
 
-	int adultCount;
-	int childCount;
-	int infantCount;
-	Integer travelPlanId;
-	Integer memberId;
 
-	@Builder
-	public JoinTravelPlanCommand(Integer adultCount, Integer childCount, Integer infantCount,
-			Integer travelPlanId, Integer memberId) {
-		this.adultCount = adultCount;
-		this.childCount = childCount;
-		this.infantCount = infantCount;
-		this.travelPlanId = travelPlanId;
-		this.memberId = memberId;
-	}
+public record JoinTravelPlanCommand(
+        int adultCount,
+        int childCount,
+        int infantCount,
+        Integer travelPlanId,
+        Integer memberId
+) {
 
+    @Builder
+    public JoinTravelPlanCommand {
+    }
+
+    public TravelPlan commandToDomain() {
+        return TravelPlan.builder()
+                .travelPlanInfo(TravelPlanInfo.builder()
+                        .travelPlanId(travelPlanId)
+                        .build())
+                .memberTravelPlans(List.of(MemberTravelPlan.builder()
+                        .memberId(memberId)
+                        .infantCount(infantCount)
+                        .childCount(childCount)
+                        .adultCount(adultCount)
+                        .build()))
+                .build();
+    }
 }
+

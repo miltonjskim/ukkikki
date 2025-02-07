@@ -1,33 +1,51 @@
 package com.dancing_orangutan.ukkikki.travelPlan.mapper;
 
+import com.dancing_orangutan.ukkikki.travelPlan.domain.memberTravel.MemberTravelPlan;
+import com.dancing_orangutan.ukkikki.travelPlan.domain.memberTravel.MemberTravelPlanEntity;
+import com.dancing_orangutan.ukkikki.travelPlan.domain.travelPlan.TravelPlan;
+import com.dancing_orangutan.ukkikki.travelPlan.domain.travelPlan.TravelPlanEntity;
+import com.dancing_orangutan.ukkikki.travelPlan.domain.travelPlan.TravelPlanInfo;
+import org.springframework.stereotype.Component;
 
-import com.dancing_orangutan.ukkikki.travelPlan.domain.travelPlan.TravelPlanRead;
-import com.dancing_orangutan.ukkikki.travelPlan.ui.response.*;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+@Component
+public class TravelPlanMapper {
 
-import java.util.List;
+    public TravelPlan entityToDomain(TravelPlanEntity entity) {
+        return TravelPlan.builder()
+                .travelPlanInfo(mapToTravelPlanInfo(entity))
+                .memberTravelPlans(entity.getMemberTravelPlans().stream()
+                        .map(this::mapToMemberTravelPlan).toList())
+                .build();
+    }
 
-//spring container에 Bean으로 등록
-@Mapper(componentModel = "spring")
-public interface TravelPlanMapper {
+    private TravelPlanInfo mapToTravelPlanInfo(TravelPlanEntity entity) {
+        return TravelPlanInfo.builder()
+                .travelPlanId(entity.getTravelPlanId())
+                .name(entity.getName())
+                .departureCityId(entity.getDepartureCity().getCityId())
+                .arrivalCityId(entity.getArrivalCity().getCityId())
+                .startDate(entity.getStartDate())
+                .endDate(entity.getEndDate())
+                .minPeople(entity.getMinPeople())
+                .maxPeople(entity.getMaxPeople())
+                .planningStatus(entity.getPlanningStatus())
+                .hostComment(entity.getHostComment())
+                .keywords(
+                        entity.getTravelPlanKeywords().stream()
+                                .map(keywordEntity -> keywordEntity.getKeyword().getKeywordId())
+                                .toList()
+                )
+                .createTime(entity.getCreateTime())
+                .closeTime(entity.getCloseTime())
+                .build();
+    }
 
-
-    //Read -> JoinTravelPlanResponse
-    @Mapping(source = "users", target = "users")
-    @Mapping(source = "travelPlan", target = "travelPlan")
-    @Mapping(source = "messages", target = "messages")
-    JoinTravelPlanResponse toJoinTravelResponse(TravelPlanRead travelPlanRead);
-
-    List<MemberResponse> mapUsers(List<TravelPlanRead.UserInfo> users);
-
-    List<MessageInfoResponse> mapMessages(List<TravelPlanRead.MessageInfo> messages);
-
-    @Mapping(source = "places", target = "places")
-    TravelPlanInfoResponse mapTravelPlan(TravelPlanRead.TravelPlanInfo travelPlan);
-
-    List<PlaceInfoResponse> mapPlaces(List<TravelPlanRead.PlaceInfo> places);
-
-    List<PlaceTagResponse> mapPlaceTags(List<TravelPlanRead.PlaceTagInfo> placeTags);
+    private MemberTravelPlan mapToMemberTravelPlan(MemberTravelPlanEntity entity) {
+        return MemberTravelPlan.builder()
+                .hostYn(entity.isHostYn())
+                .adultCount(entity.getAdultCount())
+                .childCount(entity.getChildCount())
+                .infantCount(entity.getInfantCount())
+                .build();
+    }
 }
-

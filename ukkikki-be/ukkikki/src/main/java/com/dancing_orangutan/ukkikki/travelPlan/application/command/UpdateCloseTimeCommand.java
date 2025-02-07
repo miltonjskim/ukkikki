@@ -1,6 +1,9 @@
 package com.dancing_orangutan.ukkikki.travelPlan.application.command;
 
 import java.time.LocalDateTime;
+
+import com.dancing_orangutan.ukkikki.travelPlan.domain.travelPlan.TravelPlan;
+import com.dancing_orangutan.ukkikki.travelPlan.domain.travelPlan.TravelPlanInfo;
 import lombok.Builder;
 
 public record UpdateCloseTimeCommand(Integer travelPlanId, LocalDateTime closeTime) {
@@ -19,5 +22,14 @@ public record UpdateCloseTimeCommand(Integer travelPlanId, LocalDateTime closeTi
 		if (travelPlanId == null) {
 			throw new IllegalArgumentException("여행 계획 ID는 필수 입력값입니다.");
 		}
+	}
+
+	public TravelPlan commandToDomain() {
+		return TravelPlan.builder()
+				.travelPlanInfo(TravelPlanInfo.builder()
+						.travelPlanId(travelPlanId)
+						.closeTime(closeTime)
+						.build())
+				.build();
 	}
 }

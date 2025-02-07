@@ -3,6 +3,9 @@ package com.dancing_orangutan.ukkikki.travelPlan.application.query;
 import com.dancing_orangutan.ukkikki.travelPlan.constant.PlanningStatus;
 import java.time.LocalDate;
 import java.util.List;
+
+import com.dancing_orangutan.ukkikki.travelPlan.domain.travelPlan.TravelPlan;
+import com.dancing_orangutan.ukkikki.travelPlan.domain.travelPlan.TravelPlanInfo;
 import lombok.Builder;
 
 
@@ -27,6 +30,19 @@ public record SearchTravelPlanQuery(LocalDate startDate, LocalDate endDate, Inte
 		if (startDate.isAfter(endDate)) {
 			throw new IllegalArgumentException("시작일은 종료일보다 이후일 수 없습니다.");
 		}
+	}
 
+	public TravelPlan queryToDomain() {
+		return TravelPlan.builder()
+				.travelPlanInfo(
+						TravelPlanInfo.builder()
+								.departureCityId(departureCityId)
+								.arrivalCityId(arrivalCityId)
+								.startDate(startDate)
+								.endDate(endDate)
+								.planningStatus(status)
+								.keywords(keywords)
+								.build())
+				.build();
 	}
 }

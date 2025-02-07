@@ -1,8 +1,8 @@
 package com.dancing_orangutan.ukkikki.travelPlan.ui.response;
 
 import com.dancing_orangutan.ukkikki.travelPlan.domain.travelPlan.TravelPlan;
-import com.dancing_orangutan.ukkikki.travelPlan.ui.request.KeywordUi;
-import com.dancing_orangutan.ukkikki.travelPlan.ui.request.TravelPlanInfoUi;
+import com.dancing_orangutan.ukkikki.travelPlan.ui.KeywordUi;
+import com.dancing_orangutan.ukkikki.travelPlan.ui.TravelPlanInfoUi;
 
 
 import java.util.List;
@@ -15,15 +15,15 @@ public record CreateTravelPlanResponse(TravelPlanInfoUi travelPlan) {
 			return null;
 		}
 		TravelPlanInfoUi travelPlanInfoUi = new TravelPlanInfoUi(
-				travelPlan.getTravelPlanInfo().name(),
-				travelPlan.getTravelPlanInfo().departureCityId(),
-				travelPlan.getTravelPlanInfo().arrivalCityId(),
-				travelPlan.getTravelPlanInfo().startDate(),
-				travelPlan.getTravelPlanInfo().endDate(),
-				travelPlan.getTravelPlanInfo().minPeople(),
-				travelPlan.getTravelPlanInfo().maxPeople(),
-				travelPlan.getTravelPlanInfo().planningStatus(),
-				mapKeywords(travelPlan.getTravelPlanInfo().keywords())
+				travelPlan.travelPlanInfo().name(),
+				travelPlan.travelPlanInfo().departureCityId(),
+				travelPlan.travelPlanInfo().arrivalCityId(),
+				travelPlan.travelPlanInfo().startDate(),
+				travelPlan.travelPlanInfo().endDate(),
+				travelPlan.travelPlanInfo().minPeople(),
+				travelPlan.travelPlanInfo().maxPeople(),
+				travelPlan.travelPlanInfo().planningStatus(),
+				mapKeywords(travelPlan.travelPlanInfo().keywords())
 		);
 
 		return new CreateTravelPlanResponse(travelPlanInfoUi);

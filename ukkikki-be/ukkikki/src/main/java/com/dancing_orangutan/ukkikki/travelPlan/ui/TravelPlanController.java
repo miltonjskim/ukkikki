@@ -1,6 +1,5 @@
 package com.dancing_orangutan.ukkikki.travelPlan.ui;
 
-import com.dancing_orangutan.ukkikki.event.eventPublisher.SpringEventPublisher;
 import com.dancing_orangutan.ukkikki.global.security.MemberUserDetails;
 import com.dancing_orangutan.ukkikki.global.util.ApiUtils;
 import com.dancing_orangutan.ukkikki.travelPlan.application.command.*;
@@ -33,8 +32,8 @@ public class TravelPlanController {
 	public ApiUtils.ApiResponse<CreateTravelPlanResponse> createTravelPlan(
 			@RequestBody CreateTravelPlanRequest request,
 			@AuthenticationPrincipal MemberUserDetails memberUserDetails) {
-		CreateTravelPlanCommand command = request.toCommand(memberUserDetails.getMemberId());
 
+		CreateTravelPlanCommand command = request.toCommand(memberUserDetails.getMemberId());
 		return ApiUtils.success(travelPlanService.createTravelPlan(command));
 	}
 
@@ -46,7 +45,6 @@ public class TravelPlanController {
 
 		JoinTravelPlanCommand command = request.requestToDomain(memberUserDetails.getMemberId(),
 				travelPlanId);
-
 		return ApiUtils.success(travelPlanService.joinTravelPlan(command));
 	}
 
@@ -68,7 +66,6 @@ public class TravelPlanController {
 				.keywords(keywords)
 				.status(status)
 				.build();
-
 		searchQuery.validate();
 
 		return ApiUtils.success(travelPlanService.searchTravelPlan(searchQuery));
@@ -127,11 +124,11 @@ public class TravelPlanController {
 	}
 
 	@PutMapping("/{travelPlanId}/companion")
-	public ApiUtils.ApiResponse<String> updateHost(@RequestBody UpdateHostRequest request
+	public ApiUtils.ApiResponse<String> updateHost(@RequestBody UpdateCompanionRequest request
 			, @PathVariable(name = "travelPlanId") Integer travelPlanId
 			, @AuthenticationPrincipal MemberUserDetails memberUserDetails) {
 
-		UpdateHostCommand command = UpdateHostCommand.builder()
+		UpdateCompanionCommand command = UpdateCompanionCommand.builder()
 				.travelPlanId(travelPlanId)
 				.memberId(memberUserDetails.getMemberId())
 				.childCount(request.childCount())
@@ -143,5 +140,21 @@ public class TravelPlanController {
 
 		travelPlanService.updateHost(command);
 		return ApiUtils.success("인원이 성공적으로 변경되었습니다.");
+	}
+
+	@PutMapping("{travelPlanId}/exit")
+	public ApiUtils.ApiResponse<Object> exitTravelPlan(@PathVariable(name = "travelPlanId") Integer travelPlanId,
+													   @AuthenticationPrincipal MemberUserDetails memberUserDetails) {
+
+		ExitTravelPlanCommand command = ExitTravelPlanCommand.builder()
+				.travelPlanId(travelPlanId)
+				.memberId(memberUserDetails.getMemberId())
+				.build();
+
+		command.validate();
+		travelPlanService.exitTravelPlan()
+
+
+
 	}
 }

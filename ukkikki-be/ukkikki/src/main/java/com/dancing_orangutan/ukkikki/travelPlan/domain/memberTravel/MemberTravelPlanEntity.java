@@ -46,7 +46,6 @@ public class MemberTravelPlanEntity {
 	@Column(nullable = false, name = "first_join_time")
 	private LocalDateTime firstJoinTime;
 
-	@LastModifiedDate
 	@Column(nullable = false, name = "last_join_time")
 	private LocalDateTime lastJoinTime;
 

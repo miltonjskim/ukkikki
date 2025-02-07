@@ -1,6 +1,9 @@
 package com.dancing_orangutan.ukkikki.travelPlan.application.command;
 
 import com.dancing_orangutan.ukkikki.travelPlan.constant.PlanningStatus;
+import com.dancing_orangutan.ukkikki.travelPlan.domain.travelPlan.Host;
+import com.dancing_orangutan.ukkikki.travelPlan.domain.travelPlan.TravelPlan;
+import com.dancing_orangutan.ukkikki.travelPlan.domain.travelPlan.TravelPlanInfo;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -25,5 +28,27 @@ public record CreateTravelPlanCommand(
 	@Builder
 	public CreateTravelPlanCommand{
 
+	}
+
+	public TravelPlan commandToDomain() {
+		return TravelPlan.builder()
+				.travelPlanInfo(TravelPlanInfo.builder()
+						.name(name)
+						.departureCityId(departureCityId)
+						.arrivalCityId(arrivalCityId)
+						.planningStatus(planningStatus)
+						.startDate(startDate)
+						.endDate(endDate)
+						.minPeople(minPeople)
+						.maxPeople(maxPeople)
+						.keywords(keywords)
+						.build())
+				.host(Host.builder()
+						.adultCount(adultCount)
+						.infantCount(infantCount)
+						.childCount(childCount)
+						.memberId(memberId)
+						.build())
+				.build();
 	}
 }

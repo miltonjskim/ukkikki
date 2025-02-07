@@ -24,7 +24,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-public class TravelPlanEntity {
+public class 	TravelPlanEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

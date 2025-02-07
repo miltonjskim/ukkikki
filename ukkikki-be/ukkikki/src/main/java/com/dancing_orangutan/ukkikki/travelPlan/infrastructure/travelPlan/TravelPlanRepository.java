@@ -1,9 +1,12 @@
 package com.dancing_orangutan.ukkikki.travelPlan.infrastructure.travelPlan;
 
 import com.dancing_orangutan.ukkikki.entity.info.CityEntity;
+import com.dancing_orangutan.ukkikki.global.error.ApiException;
+import com.dancing_orangutan.ukkikki.global.error.ErrorCode;
 import com.dancing_orangutan.ukkikki.member.domain.MemberEntity;
 import com.dancing_orangutan.ukkikki.member.infrastructure.MemberFinder;
 import com.dancing_orangutan.ukkikki.travelPlan.domain.keyword.KeywordEntity;
+import com.dancing_orangutan.ukkikki.travelPlan.domain.memberTravel.MemberTravelPlan;
 import com.dancing_orangutan.ukkikki.travelPlan.domain.memberTravel.MemberTravelPlanEntity;
 import com.dancing_orangutan.ukkikki.travelPlan.domain.travelPlan.*;
 import com.dancing_orangutan.ukkikki.travelPlan.infrastructure.city.CityFinder;
@@ -11,6 +14,9 @@ import com.dancing_orangutan.ukkikki.travelPlan.infrastructure.keyword.KeywordFi
 
 import java.util.List;
 
+import com.dancing_orangutan.ukkikki.travelPlan.infrastructure.memberTravelPlan.MemberTravelPlanFinder;
+import com.dancing_orangutan.ukkikki.travelPlan.mapper.MemberTravelPlanMapper;
+import com.dancing_orangutan.ukkikki.travelPlan.mapper.TravelPlanMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -30,14 +36,20 @@ public class TravelPlanRepository {
 
 	private final MemberFinder memberFinder;
 
+	private final TravelPlanMapper travelPlanMapper;
+
+	private final MemberTravelPlanFinder memberTravelPlanFinder;
+
+	private final MemberTravelPlanMapper memberTravelPlanMapper;
+
 	public TravelPlan save(final TravelPlan travelPlanDomain) {
 
 		CityEntity arrivalCity = cityFinder.getReferenceById(
-				travelPlanDomain.getTravelPlanInfo().arrivalCityId());
+				travelPlanDomain.travelPlanInfo().arrivalCityId());
 		CityEntity departureCity = cityFinder.getReferenceById(
-				travelPlanDomain.getTravelPlanInfo().departureCityId());
+				travelPlanDomain.travelPlanInfo().departureCityId());
 		List<KeywordEntity> keywords = travelPlanDomain
-				.getTravelPlanInfo()
+				.travelPlanInfo()
 				.keywords()
 				.stream()
 				.map(keywordFinder::getReferenceById)
@@ -45,15 +57,15 @@ public class TravelPlanRepository {
 		MemberEntity member = memberFinder.getReferenceById(travelPlanDomain.getHost().memberId());
 
 		TravelPlanEntity travelPlanEntity = TravelPlanEntity.builder()
-				.name(travelPlanDomain.getTravelPlanInfo().name())
+				.name(travelPlanDomain.travelPlanInfo().name())
 				.arrivalCity(arrivalCity)
 				.departureCity(departureCity)
-				.name(travelPlanDomain.getTravelPlanInfo().name())
-				.startDate(travelPlanDomain.getTravelPlanInfo().startDate())
-				.endDate(travelPlanDomain.getTravelPlanInfo().endDate())
-				.planningStatus(travelPlanDomain.getTravelPlanInfo().planningStatus())
-				.minPeople(travelPlanDomain.getTravelPlanInfo().minPeople())
-				.maxPeople(travelPlanDomain.getTravelPlanInfo().maxPeople())
+				.name(travelPlanDomain.travelPlanInfo().name())
+				.startDate(travelPlanDomain.travelPlanInfo().startDate())
+				.endDate(travelPlanDomain.travelPlanInfo().endDate())
+				.planningStatus(travelPlanDomain.travelPlanInfo().planningStatus())
+				.minPeople(travelPlanDomain.travelPlanInfo().minPeople())
+				.maxPeople(travelPlanDomain.travelPlanInfo().maxPeople())
 				.keywords(keywords)
 				.memberId(member.getMemberId())
 				.adultCount(travelPlanDomain.getHost().adultCount())
@@ -68,27 +80,12 @@ public class TravelPlanRepository {
 
 		TravelPlanEntity entity = jpaTravelPlanRepository.save(travelPlanEntity);
 
-		return TravelPlan.builder()
-				.travelPlanInfo(TravelPlanInfo.builder()
-						.name(entity.getName())
-						.departureCityId(entity.getDepartureCity().getCityId())
-						.maxPeople(entity.getMaxPeople())
-						.minPeople(entity.getMinPeople())
-						.arrivalCityId(entity.getArrivalCity().getCityId())
-						.planningStatus(entity.getPlanningStatus())
-						.startDate(entity.getStartDate())
-						.endDate(entity.getEndDate())
-						.keywords(entity.getTravelPlanKeywords()
-								.stream()
-								.map(travelPlanKeywordEntity -> travelPlanKeywordEntity.getKeyword().getKeywordId())
-								.toList())
-						.build())
-				.build();
+		return travelPlanMapper.entityToDomain(entity);
 	}
 
 	public void joinTravelPlan(final TravelPlan travelPlanDomain) {
 		TravelPlanEntity travelPlan = jpaTravelPlanRepository.findById(
-						travelPlanDomain.getTravelPlanInfo().travelPlanId())
+						travelPlanDomain.travelPlanInfo().travelPlanId())
 				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 여행 계획입니다."));
 		MemberEntity memberEntity = memberFinder.getById(travelPlanDomain.getHost().memberId());
 
@@ -106,129 +103,62 @@ public class TravelPlanRepository {
 
 	public List<TravelPlan> searchTravelPlan(final TravelPlan travelPlanDomain) {
 		List<TravelPlanEntity> travelPlanEntities = queryDslTravelPlanRepository.searchTravelPlan(
-				travelPlanDomain.getTravelPlanInfo().startDate(),
-				travelPlanDomain.getTravelPlanInfo().endDate(),
-				travelPlanDomain.getTravelPlanInfo().departureCityId(),
-				travelPlanDomain.getTravelPlanInfo().arrivalCityId(),
-				travelPlanDomain.getTravelPlanInfo().planningStatus(),
-				travelPlanDomain.getTravelPlanInfo().keywords()
+				travelPlanDomain.travelPlanInfo().startDate(),
+				travelPlanDomain.travelPlanInfo().endDate(),
+				travelPlanDomain.travelPlanInfo().departureCityId(),
+				travelPlanDomain.travelPlanInfo().arrivalCityId(),
+				travelPlanDomain.travelPlanInfo().planningStatus(),
+				travelPlanDomain.travelPlanInfo().keywords()
 		);
 
 		return travelPlanEntities.stream()
-				.map(entity -> TravelPlan.builder()
-						.travelPlanInfo(
-								TravelPlanInfo.builder()
-										.travelPlanId(entity.getTravelPlanId())
-										.name(entity.getName())
-										.startDate(entity.getStartDate())
-										.endDate(entity.getEndDate())
-										.departureCityId(entity.getDepartureCity().getCityId())
-										.arrivalCityId(entity.getArrivalCity().getCityId())
-										.planningStatus(entity.getPlanningStatus())
-										.maxPeople(entity.getMaxPeople())
-										.keywords(
-												entity.getTravelPlanKeywords().stream()
-														.map(keywordEntity -> keywordEntity.getKeyword().getKeywordId())
-														.toList()
-										)
-										.build()
-						)
-						.host(
-								Host.builder()
-										.adultCount(entity.getMemberTravelPlans().
-												stream()
-												.mapToInt(MemberTravelPlanEntity::getAdultCount)
-												.sum()
-										).childCount(entity.getMemberTravelPlans().
-												stream()
-												.mapToInt(MemberTravelPlanEntity::getChildCount)
-												.sum())
-										.infantCount(entity.getMemberTravelPlans().
-												stream()
-												.mapToInt(MemberTravelPlanEntity::getInfantCount)
-												.sum())
-										.build()
-						)
-						.build()
-				)
+				.map(travelPlanMapper::entityToDomain)
 				.toList();
 	}
 
-	//TODO : 반복되는 코드 매퍼로 분리해야함
-	public List<TravelPlan> fetchTravelPlan(final TravelPlan travelPlanDomain) {
-		List<TravelPlanEntity> travelPlanEntities = queryDslTravelPlanRepository.fetchSuggestedTravelPlan(travelPlanDomain.getTravelPlanInfo().planningStatus());
+	public List<TravelPlan> fetchTravelPlans(final TravelPlan travelPlanDomain) {
+		List<TravelPlanEntity> travelPlanEntities = queryDslTravelPlanRepository.fetchSuggestedTravelPlan(travelPlanDomain.travelPlanInfo().planningStatus());
 
 		return travelPlanEntities.stream()
-				.map(entity -> TravelPlan.builder()
-						.travelPlanInfo(
-								TravelPlanInfo.builder()
-										.travelPlanId(entity.getTravelPlanId())
-										.name(entity.getName())
-										.startDate(entity.getStartDate())
-										.endDate(entity.getEndDate())
-										.departureCityId(entity.getDepartureCity().getCityId())
-										.arrivalCityId(entity.getArrivalCity().getCityId())
-										.planningStatus(entity.getPlanningStatus())
-										.maxPeople(entity.getMaxPeople())
-										.keywords(
-												entity.getTravelPlanKeywords().stream()
-														.map(keywordEntity -> keywordEntity.getKeyword().getKeywordId())
-														.toList()
-										)
-										.build()
-						)
-						.host(
-								Host.builder()
-										.adultCount(entity.getMemberTravelPlans().
-												stream()
-												.mapToInt(MemberTravelPlanEntity::getAdultCount)
-												.sum()
-										).childCount(entity.getMemberTravelPlans().
-												stream()
-												.mapToInt(MemberTravelPlanEntity::getChildCount)
-												.sum())
-										.infantCount(entity.getMemberTravelPlans().
-												stream()
-												.mapToInt(MemberTravelPlanEntity::getInfantCount)
-												.sum())
-										.build()
-						)
-						.build()
-				)
+				.map(travelPlanMapper::entityToDomain)
 				.toList();
 	}
 
 	public void updateTravelPlanStatus(final TravelPlan travelPlanDomain) {
-		TravelPlanEntity travelPlanEntity = jpaTravelPlanRepository.findById(travelPlanDomain.getTravelPlanInfo().travelPlanId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 여행 계획입니다."));
-        travelPlanEntity.updateStatus(travelPlanDomain.getTravelPlanInfo().planningStatus());
+		TravelPlanEntity travelPlanEntity = jpaTravelPlanRepository.findById(travelPlanDomain.travelPlanInfo().travelPlanId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 여행 계획입니다."));
+        travelPlanEntity.updateStatus(travelPlanDomain.travelPlanInfo().planningStatus());
 	}
 
 	public void writeComment(final TravelPlan domain) {
 		TravelPlanEntity entity = jpaTravelPlanRepository.findById(
-						domain.getTravelPlanInfo().travelPlanId())
+						domain.travelPlanInfo().travelPlanId())
 				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 여행 계획입니다."));
 
-		entity.updateComment(domain.getTravelPlanInfo().hostComment());
+		entity.updateComment(domain.travelPlanInfo().hostComment());
 	}
 
 	public TravelPlan updateCloseTime(final TravelPlan domain) {
 		TravelPlanEntity entity = jpaTravelPlanRepository.findById(
-						domain.getTravelPlanInfo().travelPlanId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 여행 계획입니다."));
+						domain.travelPlanInfo().travelPlanId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 여행 계획입니다."));
 
-		entity.updateCloseTime(domain.getTravelPlanInfo().closeTime());
+		entity.updateCloseTime(domain.travelPlanInfo().closeTime());
 
-		return TravelPlan.builder()
-				.travelPlanInfo(TravelPlanInfo.builder().
-						createTime(entity.getCreateTime())
-						.closeTime(entity.getCloseTime())
-						.build())
-				.build();
+		return travelPlanMapper.entityToDomain(entity);
 	}
 
-	public void updateHost(final TravelPlan domain) {
+	public void updateCompanion(final TravelPlan domain) {
 		TravelPlanEntity travelPlanEntity = jpaTravelPlanRepository.findById(
-				domain.getTravelPlanInfo().travelPlanId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 여행 계획입니다."));
+				domain.travelPlanInfo().travelPlanId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 여행 계획입니다."));
 
 		travelPlanEntity.updateHostInfo(domain.getHost().memberId(), domain.getHost().adultCount(), domain.getHost().childCount(), domain.getHost().infantCount());
+	}
+
+	public TravelPlan fetchTravelPlan(final TravelPlan domain) {
+		TravelPlanEntity entity = findById(domain.travelPlanInfo().travelPlanId());
+		return travelPlanMapper.entityToDomain(entity);
+	}
+
+	private TravelPlanEntity findById(final Integer id) {
+		return jpaTravelPlanRepository.findById(id).orElseThrow(() -> new ApiException(ErrorCode.TRAVEL_PLAN_NOT_FOUND));
 	}
 }
