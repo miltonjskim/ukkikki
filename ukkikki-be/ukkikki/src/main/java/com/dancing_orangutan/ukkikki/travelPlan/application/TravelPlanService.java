@@ -3,14 +3,19 @@ package com.dancing_orangutan.ukkikki.travelPlan.application;
 
 import com.dancing_orangutan.ukkikki.event.eventPublisher.SpringEventPublisher;
 import com.dancing_orangutan.ukkikki.event.travelPlanEvent.HostUpdatedEvent;
+import com.dancing_orangutan.ukkikki.member.domain.member.MemberEntity;
+import com.dancing_orangutan.ukkikki.member.infrastructure.member.MemberFinder;
 import com.dancing_orangutan.ukkikki.travelPlan.application.command.*;
 import com.dancing_orangutan.ukkikki.travelPlan.application.query.FetchSuggestedTravelPlanQuery;
 import com.dancing_orangutan.ukkikki.travelPlan.application.query.SearchTravelPlanQuery;
 import com.dancing_orangutan.ukkikki.travelPlan.domain.keyword.KeywordEntity;
+import com.dancing_orangutan.ukkikki.travelPlan.domain.memberTravel.MemberTravelPlanEntity;
 import com.dancing_orangutan.ukkikki.travelPlan.domain.travelPlan.*;
 import com.dancing_orangutan.ukkikki.travelPlan.infrastructure.keyword.JpaKeywordRepository;
+import com.dancing_orangutan.ukkikki.travelPlan.infrastructure.memberTravel.MemberTravelPlanRepository;
 import com.dancing_orangutan.ukkikki.travelPlan.infrastructure.memberTravelPlan.MemberTravelPlanFinder;
 import com.dancing_orangutan.ukkikki.travelPlan.infrastructure.memberTravelPlan.MemberTravelPlanModifier;
+import com.dancing_orangutan.ukkikki.travelPlan.infrastructure.travelPlan.JpaTravelPlanRepository;
 import com.dancing_orangutan.ukkikki.travelPlan.ui.request.KeywordUi;
 import com.dancing_orangutan.ukkikki.travelPlan.ui.response.*;
 import com.dancing_orangutan.ukkikki.travelPlan.infrastructure.travelPlan.TravelPlanRepository;
@@ -37,6 +42,8 @@ public class TravelPlanService {
 	private final MemberTravelPlanModifier memberTravelPlanModifier;
 	private final SpringEventPublisher springEventPublisher;
 	private final JpaKeywordRepository jpaKeywordRepository;
+	private final MemberTravelPlanRepository memberTravelPlanRepository;
+	private final JpaTravelPlanRepository jpaTravelPlanRepository;
 
 	@Transactional
 	public CreateTravelPlanResponse createTravelPlan(CreateTravelPlanCommand command) {
@@ -232,4 +239,19 @@ public class TravelPlanService {
 				.build();
     }
 
+	@Transactional
+	public void exitTravelPlan(final ExitTravelPlanCommand command) {
+		MemberTravelPlanEntity memberTravelPlanEntity = memberTravelPlanRepository.findByMember_MemberIdAndTravelPlan_TravelPlanId(
+						command.memberId(), command.travelPlanId())
+				.orElseThrow(() -> new IllegalArgumentException("MemberTravelPlanEntity가 존재하지 않습니다."));
+
+		TravelPlanEntity entity = jpaTravelPlanRepository.findById(command.travelPlanId())
+				.orElseThrow(() -> new IllegalArgumentException("여행 계획이 존재하지 않습니다."));
+
+		if (memberTravelPlanEntity.isHostYn()) {
+			jpaTravelPlanRepository.delete(entity);
+		} else {
+			memberTravelPlanEntity.exit();
+		}
+	}
 }

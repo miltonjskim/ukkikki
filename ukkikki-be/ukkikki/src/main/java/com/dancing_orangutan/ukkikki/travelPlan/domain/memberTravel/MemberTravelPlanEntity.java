@@ -1,5 +1,8 @@
 package com.dancing_orangutan.ukkikki.travelPlan.domain.memberTravel;
 
+
+import static java.time.LocalDateTime.now;
+
 import com.dancing_orangutan.ukkikki.member.domain.member.MemberEntity;
 import com.dancing_orangutan.ukkikki.travelPlan.domain.travelPlan.TravelPlanEntity;
 import jakarta.persistence.Column;
@@ -83,13 +86,18 @@ public class MemberTravelPlanEntity {
 	}
 
 	public void updateLastJoinTime() {
-		this.lastJoinTime = LocalDateTime.now();
+		this.lastJoinTime = now();
 	}
 
 	public void updateHost(int adultCount, int childCount, int infantCount) {
 		this.adultCount = adultCount;
 		this.childCount = childCount;
 		this.infantCount = infantCount;
+	}
+
+	public void exit() {
+		this.exitYn = true;
+		this.exitTime = now();
 	}
 }
 

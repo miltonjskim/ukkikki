@@ -15,6 +15,7 @@ import com.dancing_orangutan.ukkikki.travelPlan.ui.response.SearchTravelPlanResp
 import com.dancing_orangutan.ukkikki.travelPlan.ui.response.FetchAllTravelPlansResponse;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -160,5 +161,20 @@ public class TravelPlanController {
 	public ApiUtils.ApiResponse<GetKeywordsResponse> getKeywords() {
 		GetKeywordsResponse response = travelPlanService.getKeywords();
 		return ApiUtils.success(response);
+	}
+
+	@PutMapping("/{travelPlanId}/exit")
+	public ApiUtils.ApiResponse<String> exitTravelPlan(
+			@PathVariable(name = "travelPlanId") Integer travelPlanId,
+			@AuthenticationPrincipal MemberUserDetails memberUserDetails) {
+
+		ExitTravelPlanCommand command = ExitTravelPlanCommand.builder()
+				.memberId(memberUserDetails.getMemberId())
+				.travelPlanId(travelPlanId)
+				.build();
+
+		travelPlanService.exitTravelPlan(command);
+
+		return ApiUtils.success("여행 계획 나가기가 성공적으로 실행되었습니다.");
 	}
 }
