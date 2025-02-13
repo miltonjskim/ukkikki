@@ -1,33 +1,38 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import Footer from '../components/layout/Footer';
 import Header from '../components/layout/Header';
 import KakaoPayTest from '../services/KakaoPayTest';
 import AgencyList from '../components/vote/AgencyList';
 import CustomCalendar from '../utils/CustomCalendar';
+import { publicRequest } from '../hooks/requestMethod';
 
 const UserVotePage = () => {
-  const [agencies, setAgencies] = useState([
-    { id: 1, name: 'AAA 여행사', price: 120000, votes: 0 },
-    { id: 2, name: 'BBB 투어', price: 150000, votes: 0 },
-    { id: 3, name: 'CCC 트래블', price: 130000, votes: 0 },
-  ]);
+  const { travelPlanId: travelPlanIdFromUrl } = useParams();
+  const location = useLocation();
+  const initialSelectedCard = location.state?.selectedCard;
+  const [proposals, setProposals] = useState([]);
 
-  // ✅ 투표 처리 함수
-  const handleVote = (id, isVoting) => {
-    setAgencies((prev) =>
-      prev.map((agency) =>
-        agency.id === id
-          ? { ...agency, votes: isVoting ? agency.votes + 1 : agency.votes - 1 }
-          : agency,
-      ),
-    );
+  // 우선, URL에서 travelPlanId를 가져오고, 만약 location.state가 없다면 이를 사용하도록 함
+  const travelPlanId = initialSelectedCard?.travelPlanId || travelPlanIdFromUrl;
+
+  // ✅ 데이터 가져오기 함수
+  const fetchProposals = async () => {
+    try {
+      const response = await publicRequest.get(`/api/v1/travel-plans/${travelPlanId}/proposals`);
+      if (response.data?.data) {
+        setProposals(response.data.data);
+        console.log('✅ 제안서 데이터:', response.data.data);
+      }
+    } catch (error) {
+      console.error('🚨 제안서 데이터 가져오기 실패:', error);
+    }
   };
 
-  const handleDetail = (agency) => {
-    alert(
-      `${agency.name} 상세보기\n금액: ${agency.price}원\n투표수: ${agency.votes}`,
-    );
-  };
+  // ✅ useEffect를 사용하여 컴포넌트가 마운트될 때 데이터 가져오기
+  useEffect(() => {
+    fetchProposals();
+  }, [travelPlanId]);
 
   return (
     <div className="bg-gray-50 min-h-screen">
